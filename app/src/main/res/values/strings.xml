@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Health Diary</string>
+    <string name="date">Date</string>
+    <string name="state">State</string>
+    <string name="card_title">"Indicator's title"</string>
+    <string name="card_value">": Value"</string>
 </resources>

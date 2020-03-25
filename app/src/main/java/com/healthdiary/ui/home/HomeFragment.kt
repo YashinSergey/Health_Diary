@@ -7,8 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.healthdiary.R
+import com.healthdiary.model.entities.Indicator
+import com.healthdiary.ui.home.adapters.ListIndicatorsAdapter
 import com.healthdiary.ui.viewmodel.HomeViewModel
+import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 
 class HomeFragment : Fragment() {
@@ -17,7 +21,7 @@ class HomeFragment : Fragment() {
         fun newInstance() = HomeFragment()
     }
 
-    private lateinit var viewModel: HomeViewModel
+    private var viewModel: HomeViewModel = HomeViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,4 +38,10 @@ class HomeFragment : Fragment() {
         })
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        rv_indicators.layoutManager = LinearLayoutManager(this.context)
+        val adapter = ListIndicatorsAdapter(viewModel.viewState.value  as ArrayList<Indicator>)
+        rv_indicators.adapter = adapter
+    }
 }
