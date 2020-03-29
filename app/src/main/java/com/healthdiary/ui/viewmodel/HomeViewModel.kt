@@ -10,6 +10,7 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(repository: Repository) : ViewModel() {
+
     val viewState = MutableLiveData<Note>()
     var localDate = LocalDate.now()
 
