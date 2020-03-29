@@ -9,6 +9,7 @@ import com.healthdiary.ui.home.HomeFragment
 import com.healthdiary.ui.profile.ProfileFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import org.koin.androidx.fragment.android.setupKoinFragmentFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,10 +24,9 @@ class MainActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setupKoinFragmentFactory()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        Timber.plant(Timber.DebugTree())
 
         displayFragment(homeFragment)
         setBottomNavigationListener()
