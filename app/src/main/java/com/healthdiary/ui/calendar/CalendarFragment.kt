@@ -8,11 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.healthdiary.R
 import com.healthdiary.ui.viewmodel.CalendarViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class CalendarFragment: Fragment() {
+class CalendarFragment : Fragment() {
 
-    private var viewModel = CalendarViewModel()
+    private val calendarViewModel by viewModel<CalendarViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_calendar, container, false)
@@ -21,7 +22,7 @@ class CalendarFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer {
+        calendarViewModel.viewState.observe(viewLifecycleOwner, Observer {
             Timber.d(it.toString())
         })
     }

@@ -8,14 +8,13 @@ import com.healthdiary.ui.calendar.CalendarFragment
 import com.healthdiary.ui.home.HomeFragment
 import com.healthdiary.ui.profile.ProfileFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
-import org.koin.androidx.fragment.android.setupKoinFragmentFactory
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
-    private val homeFragment = HomeFragment()
-    private val calendarFragment = CalendarFragment()
-    private val profileFragment = ProfileFragment()
+    private val homeFragment by inject<HomeFragment>()
+    private val calendarFragment by inject<CalendarFragment>()
+    private val profileFragment by inject<ProfileFragment>()
 
     private val bottomNavMap = mapOf(
         R.id.bottom_nav_item_home to homeFragment,
@@ -24,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setupKoinFragmentFactory()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -37,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBottomNavigationListener() {
-        bottom_nav_home.setOnNavigationItemSelectedListener { menuItem ->
+           bottom_nav_home.setOnNavigationItemSelectedListener { menuItem ->
             val fragment = bottomNavMap[menuItem.itemId]
             fragment?.let { displayFragment(it) }
             return@setOnNavigationItemSelectedListener true
