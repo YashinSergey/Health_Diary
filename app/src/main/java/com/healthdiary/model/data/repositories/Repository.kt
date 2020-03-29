@@ -1,8 +1,8 @@
 package com.healthdiary.model.data.repositories
 
 import com.healthdiary.model.entities.Note
-import java.time.LocalDate
+import java.util.*
 
 interface Repository {
-    fun getNoteByDate(date: LocalDate): Note?
+    fun getNoteByDate(date: Date): Note?
 }

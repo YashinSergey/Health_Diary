@@ -1,17 +1,20 @@
 package com.healthdiary.model.data.localstorage
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.annotation.SuppressLint
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.Note
-import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.*
 
 object LocalDataSource : Repository {
 
-    override fun getNoteByDate(date: LocalDate): Note? {
+    @SuppressLint("SimpleDateFormat")
+    val dateFormat = SimpleDateFormat("dd MMMM yyyy")
+
+    override fun getNoteByDate(date: Date): Note? {
         notes.forEach {
-            if(it.date == date)
+            if(dateFormat.format(it.date) == dateFormat.format(date))
                 return it
         }
         return null
@@ -27,8 +30,8 @@ object LocalDataSource : Repository {
         Indicator(7, "Indicator 4",  "68", "custom", 123)
     )
 
-    @RequiresApi(Build.VERSION_CODES.O)
     val notes: MutableList<Note> = mutableListOf(
-        Note(1, LocalDate.now(), data, "ok")
+        Note(1, Date() , data, "ok"),
+        Note(2, Date(), data, "everything bad, life is sucks")
     )
 }
