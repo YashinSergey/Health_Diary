@@ -5,7 +5,7 @@ import com.healthdiary.model.entities.Note
 import java.util.*
 
 interface Repository {
+    fun getNotesByDate(date: Date) : List<Note>
     fun getNotesByIndicatorId(id: Int?) : List<Note>
     fun getIndicatorById(id: Int?) : Indicator?
-    fun getNoteByDate(date: Date): Note?
 }

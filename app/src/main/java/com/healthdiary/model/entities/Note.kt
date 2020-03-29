@@ -5,5 +5,6 @@ import java.util.*
 data class Note(
     val id: Int,
     val date: Date,
-    val indicators: List<Indicator>,
+    val indicator: Indicator,
+    val value: Float,
     val comment: String)

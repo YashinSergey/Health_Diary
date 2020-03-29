@@ -23,7 +23,7 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel() {
     private fun getChartSeries(notes: List<Note>): Array<DataPoint> {
         return Array(notes.size) {
             val currentNote = notes[it]
-            DataPoint(currentNote.date, currentNote.indicators[it].values)
+            DataPoint(currentNote.date, currentNote.value.toDouble())
         }
     }
 }

@@ -16,47 +16,39 @@ object LocalDataSource : Repository {
     @SuppressLint("SimpleDateFormat")
     val dateFormat = SimpleDateFormat("dd MMMM yyyy")
 
-    override fun getNoteByDate(date: Date): Note? {
-        notes.forEach {
-            if(dateFormat.format(it.date) == dateFormat.format(date))
-                return it
-        }
-        return null
+    private val indicators: MutableList<Indicator> = mutableListOf(
+        Indicator(1, "Height", "cm", 123),
+        Indicator(2, "Weight", "kg", 123),
+        Indicator(3, "Sleep", "h", 123),
+        Indicator(4, "Indicator 1", "custom", 123),
+        Indicator(5, "Indicator 2", "custom", 123),
+        Indicator(6, "Indicator 3", "custom", 123),
+        Indicator(7, "Indicator 4", "custom", 123)
+    )
+
+    private val notesForOneDay: MutableList<Note> = mutableListOf(
+        Note(7, Date(), indicators[0], 68f, "custom"),
+        Note(8, Date(), indicators[1], 70f, "custom"),
+        Note(9, Date(), indicators[2], 69f, "custom")
+    )
+
+    private val notesOfIndicator: MutableList<Note> = mutableListOf(
+        Note(1, Date(), indicators[1], 60f, "ok"),
+        Note(2, Date(), indicators[1], 61f, "everything bad, life is sucks"),
+        Note(2, Date(), indicators[1], 60f, "everything bad, life is sucks"),
+        Note(2, Date(), indicators[1], 59f, "everything bad, life is sucks")
+    )
+
+    override fun getNotesByDate(date: Date): List<Note> {
+        return notesForOneDay
     }
-
-    private val data: MutableList<Indicator> = mutableListOf(
-        Indicator(1, "Height", 180.0, "cm", 123),
-        Indicator(2, "Weight", 80.0, "kg", 123),
-        Indicator(3, "Sleep", 8.0, "h", 123),
-        Indicator(4, "Indicator 1", 22.0, "custom", 123),
-        Indicator(5, "Indicator 2", 33.0, "custom", 123),
-        Indicator(6, "Indicator 3", 12.0, "custom", 123),
-        Indicator(7, "Indicator 4", 68.0, "custom", 123),
-        Indicator(8, "Indicator 4", 70.0, "custom", 123),
-        Indicator(9, "Indicator 4", 69.0, "custom", 123)
-    )
-
-    private val ind4Data: MutableList<Indicator> = mutableListOf(
-        Indicator(7, "Indicator 4", 68.0, "custom", 123),
-        Indicator(8, "Indicator 4", 70.0, "custom", 123),
-        Indicator(9, "Indicator 4", 69.0, "custom", 123)
-    )
-
-    val notes: MutableList<Note> = mutableListOf(
-        Note(1, Date() , data, "ok"),
-        Note(2, Date(), data, "everything bad, life is sucks")
-    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getNotesByIndicatorId(id: Int?): List<Note> {
-        return arrayListOf(
-            Note(1, GregorianCalendar(2020, 3, 1).time, ind4Data, "ok"),
-            Note(1, GregorianCalendar(2020, 3, 2).time, ind4Data, "ok"),
-            Note(1, GregorianCalendar(2020, 3, 3).time, ind4Data, "ok")
-        )
+        return notesOfIndicator
     }
 
     override fun getIndicatorById(id: Int?): Indicator? {
-        return Indicator(9, "Indicator 4", 69.0, "custom", 123)
+        return indicators[1]
     }
 }
