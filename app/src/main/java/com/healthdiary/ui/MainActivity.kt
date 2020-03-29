@@ -9,12 +9,14 @@ import org.koin.androidx.fragment.android.setupKoinFragmentFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private val homeFragment = HomeFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setupKoinFragmentFactory()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        displayFragment(HomeFragment())
+        displayFragment(homeFragment)
     }
 
     private fun displayFragment(fragment: Fragment) {

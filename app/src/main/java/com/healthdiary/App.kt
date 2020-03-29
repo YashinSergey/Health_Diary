@@ -15,10 +15,7 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             fragmentFactory()
-            modules(listOf(
-                appModule,
-                homeModule
-            ))
+            modules(listOf(appModule, homeModule))
         }
     }
 }
