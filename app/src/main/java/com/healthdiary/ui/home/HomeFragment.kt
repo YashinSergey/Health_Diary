@@ -9,14 +9,13 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import com.healthdiary.R
-import com.healthdiary.model.data.localstorage.LocalDataSource
 import com.healthdiary.ui.viewmodel.HomeViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private var viewModel = HomeViewModel(LocalDataSource)
+    private val homeViewModel by viewModel<HomeViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +27,7 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.viewState.observe(viewLifecycleOwner, Observer {
+        homeViewModel.viewState.observe(viewLifecycleOwner, Observer {
             Timber.d(it.toString())
         })
     }

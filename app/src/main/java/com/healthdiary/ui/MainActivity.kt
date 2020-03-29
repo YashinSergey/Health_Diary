@@ -5,18 +5,16 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.healthdiary.R
 import com.healthdiary.ui.home.HomeFragment
-import timber.log.Timber
+import org.koin.androidx.fragment.android.setupKoinFragmentFactory
 
 class MainActivity : AppCompatActivity() {
 
-    val homeFragment by lazy { HomeFragment() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        setupKoinFragmentFactory()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        Timber.plant(Timber.DebugTree())
-        displayFragment(homeFragment)
+        displayFragment(HomeFragment())
     }
 
     private fun displayFragment(fragment: Fragment) {
