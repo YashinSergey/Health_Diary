@@ -3,10 +3,15 @@ package com.healthdiary.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.healthdiary.R
+import com.healthdiary.extensions.display
 import com.healthdiary.ui.calendar.CalendarFragment
 import com.healthdiary.ui.home.HomeFragment
+import com.healthdiary.ui.indicator.IndicatorFragment
 import com.healthdiary.ui.profile.ProfileFragment
+import io.reactivex.functions.Consumer
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
@@ -28,10 +33,12 @@ class MainActivity : AppCompatActivity() {
 
         displayFragment(homeFragment)
         setBottomNavigationListener()
+
+        homeFragment.itemClickSubject.subscribe(createOnClickConsumer())
     }
 
     private fun displayFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+        supportFragmentManager.display(R.id.container, fragment, FragmentTransaction.TRANSIT_NONE)
     }
 
     private fun setBottomNavigationListener() {
@@ -40,5 +47,9 @@ class MainActivity : AppCompatActivity() {
             fragment?.let { displayFragment(it) }
             return@setOnNavigationItemSelectedListener true
         }
+    }
+
+    fun createOnClickConsumer(): Consumer<Int> {
+        return Consumer { displayFragment(IndicatorFragment(it)) }
     }
 }
