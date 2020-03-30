@@ -6,9 +6,7 @@ import androidx.annotation.RequiresApi
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.Note
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 object LocalDataSource : Repository {
@@ -39,6 +37,9 @@ object LocalDataSource : Repository {
         Note(4, GregorianCalendar(2020, 2, 4).time, indicators[1], 59f, "everything bad, life is sucks")
     )
 
+    //Коллекция заметок(создана для мохранения в неё)
+    private val notesBase : MutableList<Note> = mutableListOf()
+
     override fun getNotesByDate(date: Date): List<Note> {
         return notesForOneDay
     }
@@ -50,5 +51,17 @@ object LocalDataSource : Repository {
 
     override fun getIndicatorById(id: Int?): Indicator? {
         return indicators[1]
+    }
+
+    override fun saveNote(note: Note): Unit {
+        notesBase.add(note)
+    }
+
+    override fun getBaseNote(): List<Note> {
+        return notesBase
+    }
+
+    override fun getAllIndicators(): List<Indicator> {
+        return indicators
     }
 }
