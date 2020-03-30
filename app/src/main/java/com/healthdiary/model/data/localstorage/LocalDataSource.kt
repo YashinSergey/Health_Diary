@@ -1,20 +1,11 @@
 package com.healthdiary.model.data.localstorage
 
-import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.Note
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 object LocalDataSource : Repository {
-
-    @SuppressLint("SimpleDateFormat")
-    val dateFormat = SimpleDateFormat("dd MMMM yyyy")
 
     private val indicators: MutableList<Indicator> = mutableListOf(
         Indicator(1, "Height", "cm", 123),
@@ -33,34 +24,27 @@ object LocalDataSource : Repository {
     )
 
     private val notesOfIndicator: MutableList<Note> = mutableListOf(
-        Note(1, GregorianCalendar(2020, 2, 1).time, indicators[1], 60f, "ok"),
+        Note(1, GregorianCalendar(2020, 2, 1).time, indicators[1],
+            60f, "ok"),
         Note(
-            2,
-            GregorianCalendar(2020, 2, 2).time,
-            indicators[1],
-            61f,
-            "everything bad, life is sucks"
+            2, GregorianCalendar(2020, 2, 2).time, indicators[1],
+            61f, "everything bad, life is sucks"
         ),
         Note(
-            3,
-            GregorianCalendar(2020, 2, 3).time,
-            indicators[1],
-            60f,
-            "everything bad, life is sucks"
+            3, GregorianCalendar(2020, 2, 3).time, indicators[1],
+            60f, "everything bad, life is sucks"
         ),
         Note(
             4,
-            GregorianCalendar(2020, 2, 4).time,
-            indicators[1],
-            59f,
-            "everything bad, life is sucks"
+            GregorianCalendar(2020, 2, 4).time, indicators[1],
+            59f, "everything bad, life is sucks"
         )
     )
 
     override fun getNotesByDate(date: Date): List<Note> {
         return notesForOneDay
     }
-    
+
     override fun getNotesByIndicatorId(id: Int?): List<Note> {
         return notesOfIndicator
     }

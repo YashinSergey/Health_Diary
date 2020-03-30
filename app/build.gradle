@@ -42,6 +42,10 @@ dependencies {
     //Koin for Android Fragment Factory (unstable version)
     implementation "org.koin:koin-androidx-fragment:$koin_version"
 
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.18'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.jjoe64:graphview:4.2.2'

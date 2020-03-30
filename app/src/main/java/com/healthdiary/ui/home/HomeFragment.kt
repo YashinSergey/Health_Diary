@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.healthdiary.R
-import com.healthdiary.ui.MainActivity
-import com.healthdiary.ui.indicator.IndicatorFragment
 import com.healthdiary.ui.viewmodel.HomeViewModel
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -18,6 +16,7 @@ import timber.log.Timber
 class HomeFragment : Fragment() {
 
     private val homeViewModel by viewModel<HomeViewModel>()
+    val itemClickSubject = PublishSubject.create<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,9 +30,8 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         message.setOnClickListener {
-            IndicatorFragment.start(activity as MainActivity, 0) }
-        homeViewModel.viewState.observe(viewLifecycleOwner, Observer {
+            itemClickSubject.onNext(2)
             Timber.d(it.toString())
-        })
+        }
     }
 }
