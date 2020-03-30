@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         setBottomNavigationListener()
     }
 
-    public fun displayFragment(fragment: Fragment) {
+    fun displayFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
     }
 
