@@ -60,8 +60,7 @@ object LocalDataSource : Repository {
     override fun getNotesByDate(date: Date): List<Note> {
         return notesForOneDay
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun getNotesByIndicatorId(id: Int?): List<Note> {
         return notesOfIndicator
     }
