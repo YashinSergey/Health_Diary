@@ -8,11 +8,11 @@ import java.util.*
 
 class HomeViewModel(repository: Repository) : ViewModel() {
 
-    val viewState = MutableLiveData<Note>()
+    val viewState = MutableLiveData<List<Note>>()
     var date = Date()
 
     init {
-        viewState.value = repository.getNoteByDate(date)
+        viewState.value = repository.getNotesByDate(date)
     }
 
 }
