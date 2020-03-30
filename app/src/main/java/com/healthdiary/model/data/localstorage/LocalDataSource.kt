@@ -34,9 +34,27 @@ object LocalDataSource : Repository {
 
     private val notesOfIndicator: MutableList<Note> = mutableListOf(
         Note(1, GregorianCalendar(2020, 2, 1).time, indicators[1], 60f, "ok"),
-        Note(2, GregorianCalendar(2020, 2, 2).time, indicators[1], 61f, "everything bad, life is sucks"),
-        Note(3, GregorianCalendar(2020, 2, 3).time, indicators[1], 60f, "everything bad, life is sucks"),
-        Note(4, GregorianCalendar(2020, 2, 4).time, indicators[1], 59f, "everything bad, life is sucks")
+        Note(
+            2,
+            GregorianCalendar(2020, 2, 2).time,
+            indicators[1],
+            61f,
+            "everything bad, life is sucks"
+        ),
+        Note(
+            3,
+            GregorianCalendar(2020, 2, 3).time,
+            indicators[1],
+            60f,
+            "everything bad, life is sucks"
+        ),
+        Note(
+            4,
+            GregorianCalendar(2020, 2, 4).time,
+            indicators[1],
+            59f,
+            "everything bad, life is sucks"
+        )
     )
 
     override fun getNotesByDate(date: Date): List<Note> {
@@ -49,6 +67,10 @@ object LocalDataSource : Repository {
     }
 
     override fun getIndicatorById(id: Int?): Indicator? {
-        return indicators[1]
+        indicators.forEach { indicator ->
+            if (indicator.id == id)
+                return indicator
+        }
+        return null
     }
 }
