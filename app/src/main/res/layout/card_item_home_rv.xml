@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1.4"
+        android:contentDescription="@string/indicators_icon"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/txtv_indicators_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1"
+        android:gravity="start|center_vertical"
+        android:text="@string/indicators_title"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtv_separator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1.65"
+        android:gravity="start|center_vertical"
+        android:text="@string/separator"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/etxtv_indicators_value"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1.3"
+        android:autofillHints="@string/enter_today_value"
+        android:ems="10"
+        android:gravity="start|center_vertical"
+        android:inputType="textPersonName"
+        android:text="@string/enter_today_value"
+        tools:ignore="LabelFor" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1.4"
+        android:text="@string/btn_save" />
+</LinearLayout>
