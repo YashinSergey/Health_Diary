@@ -1,5 +1,6 @@
 package com.healthdiary.ui.home.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,12 +44,17 @@ class HomeRVAdapter(val repository: Repository) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(elementList?.let { it[position] })
+        val indicatorId : Int = elementList?.let { it[position].id }!!
         holder.containerView.setOnClickListener { view ->
-            val indicatorFragment = IndicatorFragment()
-            indicatorFragment.arguments?.putInt(
-                "IndicatorId",
-                elementList?.let { it[position].id }!!
-            )
+            val indicatorFragment = IndicatorFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(
+                        "IndicatorId",
+                        indicatorId
+                    )
+                }
+            }
+            Timber.d("IndicatorID put: ${indicatorId}")
             val activity: AppCompatActivity = view.context as AppCompatActivity
             activity.supportFragmentManager.beginTransaction()
                 .replace(R.id.container, indicatorFragment).addToBackStack("HOME").commit()

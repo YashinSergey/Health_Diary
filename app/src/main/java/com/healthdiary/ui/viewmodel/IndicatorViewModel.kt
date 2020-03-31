@@ -6,14 +6,11 @@ import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.Note
 import com.jjoe64.graphview.series.DataPoint
+import timber.log.Timber
 
-class IndicatorViewModel(private val repository: Repository) : ViewModel() {
+class IndicatorViewModel(val indicatorId : Int?, private val repository: Repository) : ViewModel() {
 
     val viewState = MutableLiveData<Pair<Indicator?, Array<DataPoint>>>()
-
-    init {
-        loadNotes(null)
-    }
 
     fun loadNotes(indicatorId: Int?) {
         val chartSeries = getChartSeries(repository.getNotesByIndicatorId(indicatorId))

@@ -16,6 +16,7 @@ import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_entity.*
+import timber.log.Timber
 
 
 class IndicatorFragment : Fragment() {
@@ -34,13 +35,16 @@ class IndicatorFragment : Fragment() {
     }
 
     private val layoutRes: Int = R.layout.fragment_entity
-    private val model: IndicatorViewModel = IndicatorViewModel(LocalDataSource)
+    private val model: IndicatorViewModel = IndicatorViewModel(arguments?.getInt("IndicatorId"),LocalDataSource)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val indicatorId = arguments?.getInt("IndicatorId")
+        model.loadNotes(indicatorId)
+        Timber.d("Fragment get int from Bundle: $indicatorId")
         return inflater.inflate(layoutRes, container, false)
     }
 
