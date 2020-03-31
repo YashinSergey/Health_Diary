@@ -34,6 +34,10 @@ object LocalDataSource : Repository {
         return notesForOneDay
     }
 
+    override fun getNotesByIndicatorId(id: Int?): List<Note> {
+        return notesOfIndicator
+    }
+
     override fun getIndicatorById(id: Int?): Indicator? {
         indicatorList.forEach { indicator ->
             if (indicator.id == id)

@@ -13,7 +13,6 @@ import com.healthdiary.ui.home.adapters.HomeRVAdapter
 import com.healthdiary.ui.viewmodel.HomeViewModel
 import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,13 +24,11 @@ import java.util.*
 class HomeFragment : Fragment() {
 
     private val homeViewModel by viewModel<HomeViewModel>()
-    val itemClickSubject = PublishSubject.create<Int>()
+    val clickAdapterSubject = PublishSubject.create<Int>()
 
     @SuppressLint("SimpleDateFormat")
     val dateFormat = SimpleDateFormat("dd MMMM yyyy")
-
     private val adapter: HomeRVAdapter = get()
-    val clickAdapterSubject = PublishSubject.create<Int>()
 
     @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -48,15 +45,10 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         homeViewModel.viewState.observe(viewLifecycleOwner, Observer {
+
             Timber.d(it.toString())
         })
-
-        message.setOnClickListener {
-            itemClickSubject.onNext(2)
-            Timber.d(it.toString())
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

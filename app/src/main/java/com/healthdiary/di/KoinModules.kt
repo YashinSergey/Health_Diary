@@ -4,6 +4,7 @@ import com.healthdiary.model.data.localstorage.LocalDataSource
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.ui.calendar.CalendarFragment
 import com.healthdiary.ui.home.HomeFragment
+import com.healthdiary.ui.home.adapters.HomeRVAdapter
 import com.healthdiary.ui.profile.ProfileFragment
 import com.healthdiary.ui.viewmodel.CalendarViewModel
 import com.healthdiary.ui.viewmodel.HomeViewModel
@@ -19,6 +20,7 @@ val appModule = module{
 val homeModule = module {
     viewModel { HomeViewModel(get()) }
     fragment { HomeFragment() }
+    factory { HomeRVAdapter(get()) }
 }
 val calendarModule = module {
     viewModel { CalendarViewModel() }

@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_entity.*
 import timber.log.Timber
 
 
-class IndicatorFragment(val indicatorId: Int) : Fragment() {
+class IndicatorFragment(private val indicatorId: Int) : Fragment() {
 
     private val layoutRes: Int = R.layout.fragment_entity
     private val model: IndicatorViewModel = IndicatorViewModel(arguments?.getInt("IndicatorId"),LocalDataSource)
@@ -75,6 +75,4 @@ class IndicatorFragment(val indicatorId: Int) : Fragment() {
         chart.viewport.setMaxX(points[points.size - 1].x);
         chart.viewport.isXAxisBoundsManual = true;
     }
-
-
 }
