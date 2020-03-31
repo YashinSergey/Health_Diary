@@ -22,29 +22,24 @@ import kotlin.random.Random
 class HomeRVAdapter(val repository: Repository) :
     RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
 
-    interface OnClickListener
 
     var elementList: List<Indicator>? = ArrayList()
-    val holders: ArrayList<ViewHolder> = ArrayList()
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewHolder = ViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.card_item_home_rv,
-                parent,
-                false
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+            R.layout.card_item_home_rv,
+            parent,
+            false
         )
-        holders.add(viewHolder)
-        return viewHolder
-    }
+    )
+    
 
     override fun getItemCount(): Int = elementList?.let { it.size } ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(elementList?.let { it[position] })
-        val indicatorId : Int = elementList?.let { it[position].id }!!
+        val indicatorId: Int = elementList?.let { it[position].id }!!
         holder.containerView.setOnClickListener { view ->
             val indicatorFragment = IndicatorFragment().apply {
                 arguments = Bundle().apply {
@@ -60,6 +55,7 @@ class HomeRVAdapter(val repository: Repository) :
                 .replace(R.id.container, indicatorFragment).addToBackStack("HOME").commit()
         }
 
+
     }
 
 
@@ -70,7 +66,8 @@ class HomeRVAdapter(val repository: Repository) :
 
 //            img_icon.setImageResource(entity.icon)
             txtv_indicators_title.text = entity?.title
-            val value : Float = repository.getNotesByIndicatorId(entity?.id)?.let { it[it.size-1].value }
+            val value: Float =
+                repository.getNotesByIndicatorId(entity?.id)?.let { it[it.size - 1].value }
             txtv_indicators_value.text = value.toString()
 
             //Если таки захотим вернуться к кнопке
