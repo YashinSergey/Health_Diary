@@ -56,7 +56,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
-
-    implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    testImplementation "io.mockk:mockk:1.9.3.kotlin12"
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
