@@ -70,9 +70,10 @@ class HomeRVAdapter(val repository: Repository) :
 
 //            img_icon.setImageResource(entity.icon)
             txtv_indicators_title.text = entity?.title
-
+            val value : Float = repository.getNotesByIndicatorId(entity?.id)?.let { it[it.size-1].value }
+            txtv_indicators_value.text = value.toString()
             btn_save.setOnClickListener { view ->
-                val value = etxtv_indicators_value.text.toString().toFloat()
+                val value = txtv_indicators_value.text.toString().toFloat()
                 val note = Note(Random.nextInt(0, 100000), Date(), entity!!, value, "custom")
                 repository.saveNote(note)
                 Timber.d("Save new Note. List notesBase now have ${LocalDataSource.getBaseNote().size} elements")

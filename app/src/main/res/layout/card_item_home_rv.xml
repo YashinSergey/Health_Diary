@@ -49,7 +49,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/etxtv_indicators_value"
+            android:id="@+id/txtv_indicators_value"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
