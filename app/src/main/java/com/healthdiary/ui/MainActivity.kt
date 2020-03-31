@@ -1,7 +1,9 @@
 package com.healthdiary.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.healthdiary.R
@@ -12,14 +14,17 @@ import com.healthdiary.ui.indicator.IndicatorFragment
 import com.healthdiary.ui.profile.ProfileFragment
 import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
+import org.koin.androidx.fragment.android.setupKoinFragmentFactory
 
 class MainActivity : AppCompatActivity() {
 
     private val homeFragment by inject<HomeFragment>()
     private val calendarFragment by inject<CalendarFragment>()
     private val profileFragment by inject<ProfileFragment>()
+    private val indicatorFragment = IndicatorFragment()
 
     private val bottomNavMap = mapOf(
         R.id.bottom_nav_item_home to homeFragment,
@@ -27,14 +32,14 @@ class MainActivity : AppCompatActivity() {
         R.id.bottom_nav_item_profile to profileFragment
     )
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         displayFragment(homeFragment)
         setBottomNavigationListener()
-
-        homeFragment.itemClickSubject.subscribe(createOnClickConsumer())
+        homeFragment.clickAdapterSubject.subscribe(getHomeAdapterConsumer())
     }
 
     private fun displayFragment(fragment: Fragment) {
@@ -49,7 +54,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun createOnClickConsumer(): Consumer<Int> {
-        return Consumer { displayFragment(IndicatorFragment(it)) }
+    private fun getHomeAdapterConsumer(): Consumer<Int> {
+        return Consumer {
+            indicatorFragment.apply {
+                arguments = bundleOf("INDICATOR_ID" to it)
+            }
+            displayFragment(indicatorFragment)
+        }
     }
 }

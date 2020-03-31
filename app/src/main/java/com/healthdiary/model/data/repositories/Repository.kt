@@ -8,4 +8,5 @@ interface Repository {
     fun getNotesByDate(date: Date) : List<Note>
     fun getNotesByIndicatorId(id: Int?) : List<Note>
     fun getIndicatorById(id: Int?) : Indicator?
+    fun getIndicatorList() : List<Indicator>
 }

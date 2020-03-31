@@ -3,16 +3,14 @@ package com.healthdiary.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.healthdiary.model.data.repositories.Repository
-import com.healthdiary.model.entities.Note
-import java.util.*
+import com.healthdiary.model.entities.Indicator
 
 class HomeViewModel(repository: Repository) : ViewModel() {
 
-    val viewState = MutableLiveData<List<Note>>()
-    var date = Date()
+    val viewState = MutableLiveData<List<Indicator>>()
 
     init {
-        viewState.value = repository.getNotesByDate(date)
+        viewState.value = repository.getIndicatorList()
     }
 
 }
