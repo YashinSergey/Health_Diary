@@ -42,19 +42,26 @@ class HomeRVAdapter(val repository : Repository) :
     }
 
 
+
+
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(entity: Indicator?) {
+
 //            img_icon.setImageResource(entity.icon)
             txtv_indicators_title.text = entity?.title
 
-            btn_save.setOnClickListener {view ->
-                val value = etxtv_indicators_value.text.toString().toFloat()
-                val note = Note(Random.nextInt(0, 100000), Date(), entity!!, value, "custom")
-                repository.saveNote(note)
-                Timber.d("Save new Note. List notesBase now have ${LocalDataSource.getBaseNote().size} elements")
+            containerView.setOnClickListener{view ->
+
             }
+
+//            btn_save.setOnClickListener {view ->
+//                val value = etxtv_indicators_value.text.toString().toFloat()
+//                val note = Note(Random.nextInt(0, 100000), Date(), entity!!, value, "custom")
+//                repository.saveNote(note)
+//                Timber.d("Save new Note. List notesBase now have ${LocalDataSource.getBaseNote().size} elements")
+//            }
         }
     }
 }
