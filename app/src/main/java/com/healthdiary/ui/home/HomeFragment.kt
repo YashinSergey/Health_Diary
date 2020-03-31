@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.healthdiary.R
 import com.healthdiary.ui.home.adapters.HomeRVAdapter
 import com.healthdiary.ui.viewmodel.HomeViewModel
+import io.reactivex.functions.Consumer
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,19 +23,25 @@ import java.util.*
 
 class HomeFragment : Fragment() {
 
+    private val homeViewModel by viewModel<HomeViewModel>()
+
     @SuppressLint("SimpleDateFormat")
     val dateFormat = SimpleDateFormat("dd MMMM yyyy")
 
     private val adapter: HomeRVAdapter = get()
+    val clickAdapterSubject = PublishSubject.create<Int>()
 
-    private val homeViewModel by viewModel<HomeViewModel>()
+    @SuppressLint("CheckResult")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        adapter.itemClickSubject.subscribe(getAdapterConsumer())
+        return view
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    private fun getAdapterConsumer(): Consumer<Int> {
+        return Consumer {
+            clickAdapterSubject.onNext(it)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -45,10 +53,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        txtv_date.text = dateFormat.format(Date())
+        tv_date.text = dateFormat.format(Date())
         rv_home.layoutManager = LinearLayoutManager(this.context)
-        adapter.elementList = homeViewModel.viewState.value
+        adapter.itemsList = homeViewModel.viewState.value
         rv_home.adapter = adapter
-
     }
 }
