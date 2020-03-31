@@ -72,6 +72,8 @@ class HomeRVAdapter(val repository: Repository) :
             txtv_indicators_title.text = entity?.title
             val value : Float = repository.getNotesByIndicatorId(entity?.id)?.let { it[it.size-1].value }
             txtv_indicators_value.text = value.toString()
+
+            //Если таки захотим вернуться к кнопке
             btn_save.setOnClickListener { view ->
                 val value = txtv_indicators_value.text.toString().toFloat()
                 val note = Note(Random.nextInt(0, 100000), Date(), entity!!, value, "custom")
