@@ -1,6 +1,6 @@
 package com.healthdiary.model.data.localstorage
 
-import com.healthdiary.model.data.repositories.Repository
+import com.healthdiary.model.data.repositories.*
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.Note
 import java.util.*
