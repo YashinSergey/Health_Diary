@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
     val clickAdapterSubject = PublishSubject.create<Int>()
 
     @SuppressLint("SimpleDateFormat")
-    val dateFormat = SimpleDateFormat("dd MMMM yyyy")
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     private val adapter: HomeRVAdapter = get()
 
     @SuppressLint("CheckResult")

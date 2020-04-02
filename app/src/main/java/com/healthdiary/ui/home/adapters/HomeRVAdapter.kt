@@ -9,7 +9,7 @@ import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.card_item_home_rv.*
+import kotlinx.android.synthetic.main.item_home_rv.*
 
 class HomeRVAdapter(val repository: Repository) : RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
 
@@ -17,7 +17,7 @@ class HomeRVAdapter(val repository: Repository) : RecyclerView.Adapter<HomeRVAda
     var itemClickSubject = PublishSubject.create<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_item_home_rv, parent, false))
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_home_rv, parent, false))
 
     override fun getItemCount(): Int = itemsList?.size ?: 0
 

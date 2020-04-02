@@ -1,32 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00BCD4"
-    android:orientation="vertical"
-    tools:context=".ui.home.HomeFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="70dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/date"
+        android:letterSpacing="0.30"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        tools:text="30.03.2020"/>
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/date"
-            android:textColor="#FFFFFF"
-            android:textSize="44sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/home_big_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ДНЕВНИК ЗДОРОВЬЯ"
+        android:textColor="@android:color/black"
+        android:letterSpacing="0.30"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/home_small_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/home_big_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Health diary"
+        android:letterSpacing="0.30"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:foregroundGravity="center" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/home_small_title"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
