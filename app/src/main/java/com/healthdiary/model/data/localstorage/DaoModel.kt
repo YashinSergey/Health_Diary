@@ -16,14 +16,14 @@ interface DaoModel {
     @Query("SELECT * FROM EntityIndicator WHERE id == :indicatorId")
     fun getIndicatorById(indicatorId : Int) : Indicator
 
-    @Query("SELECT * FROM EntityNote WHERE indicatorId == :indicatorId")
+    @Query("SELECT * FROM EntityNote WHERE indicator == :indicatorId")
     fun getNotesListByIndicatorId(indicatorId : Int) : List<Note>
 
     @Query("SELECT * FROM EntityNote WHERE date == :date")
     fun getNotesByDate(date : Date) : Note
 
-    @Query("SELECT ")
-    fun getCurrentIndicatorsValue(indicatorId : Int) : Float
+    @Query("SELECT * FROM EntityNote WHERE indicator == :indicator ORDER BY date DESC LIMIT 1")
+    fun getCurrentIndicatorsValue(indicator : Indicator) : Float
 
     @Query("SELECT TOP (1) FROM EntityUser")
     fun getProfileInfo() : User

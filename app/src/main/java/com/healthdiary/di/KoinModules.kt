@@ -1,5 +1,6 @@
 package com.healthdiary.di
 
+import com.healthdiary.model.data.localstorage.DataBase
 import com.healthdiary.model.data.localstorage.LocalDataSource
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.ui.calendar.CalendarFragment
@@ -14,7 +15,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module{
+
     single<Repository> { LocalDataSource }
+    single<DataBase?> { DataBase.INSTANCE }
 }
 
 val homeModule = module {
