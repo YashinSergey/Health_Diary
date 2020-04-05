@@ -9,6 +9,10 @@
         android:name="com.healthdiary.ui.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_indicatorFragment"
+            app:destination="@id/indicatorFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/calendarFragment"

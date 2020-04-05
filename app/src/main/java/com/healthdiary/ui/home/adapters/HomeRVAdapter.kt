@@ -22,7 +22,7 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemsList?.let { it[position] }
         holder.bind(item)
-        holder.itemView.setOnClickListener { item.let { listener.invoke(it!!.id) } }
+        holder.itemView.setOnClickListener { item?.let { listener(it.id) } }
     }
 
     inner class ViewHolder(override val containerView: View) :

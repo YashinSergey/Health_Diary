@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         val adapter = HomeRVAdapter(get()) {
             val bundle = Bundle()
             bundle.putInt("IndicatorId", it)
-            navController.navigate(R.id.indicatorFragment, bundle)
+            navController.navigate(R.id.action_homeFragment_to_indicatorFragment, bundle)
         }
         homeViewModel.viewState.observe(viewLifecycleOwner, Observer {
             adapter.itemsList = it
