@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:paddingBottom="70dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/tv_date"
@@ -48,9 +48,23 @@
         android:layout_marginTop="10dp" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_home"
+    <com.bosphere.fadingedgelayout.FadingEdgeLayout
+        android:id="@+id/bs_parent_fading_edge_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/home_small_title"/>
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/home_small_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:fel_edge="top|bottom"
+        app:fel_size_top="20dp"
+        app:fel_size_bottom="10dp"
+        app:fel_size_left="0dp"
+        app:fel_size_right="0dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/home_small_title" />
+    </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

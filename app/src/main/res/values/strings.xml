@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">Health Diary</string>
     <string name="enter_today_value">Enter today value</string>
-    <string name="indicators_title">Indicators title</string>
     <string name="indicators_icon">indicators icon</string>
-    <string name="separator">": "</string>
     <string name="btn_save">Save</string>
     <string name="date">Date</string>
-    <string name="value">Value</string>
     <string name="profile">Профиль</string>
     <string name="calendar">Календарь</string>
     <string name="home">Главная</string>
