@@ -47,5 +47,5 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/home_small_title"
             style="@style/VerticalFading"
-            android:paddingBottom="142dp"/>
+            android:paddingBottom="88dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
