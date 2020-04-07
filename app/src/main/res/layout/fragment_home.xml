@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_date"
@@ -14,21 +14,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="10dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="@string/date"
-        android:letterSpacing="0.30"
-        android:textColor="@android:color/black"
         android:textSize="14sp"
+        style="@style/MainTextStyle"
         tools:text="30.03.2020"/>
 
     <TextView
         android:id="@+id/home_big_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ДНЕВНИК ЗДОРОВЬЯ"
-        android:textColor="@android:color/black"
-        android:letterSpacing="0.30"
-        android:fontFamily="sans-serif-condensed"
+        android:text="@string/health_diary_text_all_caps"
+        style="@style/MainTextStyle"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_date"
@@ -42,29 +37,15 @@
         app:layout_constraintTop_toBottomOf="@+id/home_big_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Health diary"
-        android:letterSpacing="0.30"
-        android:textColor="@android:color/black"
+        style="@style/MainTextStyle"
+        android:text="@string/app_name"
         android:layout_marginTop="10dp" />
-
-
-    <com.bosphere.fadingedgelayout.FadingEdgeLayout
-        android:id="@+id/bs_parent_fading_edge_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/home_small_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:fel_edge="top|bottom"
-        app:fel_size_top="20dp"
-        app:fel_size_bottom="10dp"
-        app:fel_size_left="0dp"
-        app:fel_size_right="0dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/home_small_title" />
-    </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/home_small_title"
+            style="@style/VerticalFading"
+            android:paddingBottom="142dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
