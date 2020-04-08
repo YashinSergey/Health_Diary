@@ -67,6 +67,11 @@ class TabManager(private val mainActivity: MainActivity) {
 
         when (tabId) {
             R.id.bottom_nav_item_home -> {
+                if (currentController == navHomeController){
+                    navHomeController.popBackStack()
+                    navHomeController.navigate(R.id.homeFragment)
+                    return
+                }
                 currentController = navHomeController
                 invisibleTabContainerExcept(homeTabContainer)
             }
