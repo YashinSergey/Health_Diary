@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.healthdiary.R
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.ui.viewmodel.IndicatorViewModel
@@ -19,13 +20,14 @@ class IndicatorFragment : Fragment() {
 
     private val layoutRes: Int = R.layout.fragment_entity
     private val model: IndicatorViewModel by viewModel()
+    private val fragmentArgs: IndicatorFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val indicatorId = arguments?.getInt("IndicatorId")
+        val indicatorId = fragmentArgs.indicatorId
         model.loadNotes(indicatorId)
         model.viewState.observe(viewLifecycleOwner, Observer {
             initView(it.first, it.second)})

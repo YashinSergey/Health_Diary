@@ -8,12 +8,7 @@
         android:id="@+id/homeFragment"
         android:name="com.healthdiary.ui.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_homeFragment_to_indicatorFragment"
-            app:destination="@id/indicatorFragment"
-            app:enterAnim="@android:anim/slide_in_left" />
-    </fragment>
+        tools:layout="@layout/fragment_home"/>
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.healthdiary.ui.calendar.CalendarFragment"
@@ -28,5 +23,16 @@
         android:id="@+id/indicatorFragment"
         android:name="com.healthdiary.ui.indicator.IndicatorFragment"
         android:label="IndicatorFragment"
-        tools:layout="@layout/fragment_entity" />
+        tools:layout="@layout/fragment_entity" >
+        <argument
+            android:name="indicatorId"
+            app:argType="integer" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_indicatorFragment"
+        app:destination="@id/indicatorFragment"
+        app:enterAnim="@android:anim/slide_in_left"
+        app:exitAnim="@android:anim/slide_out_right"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 </navigation>

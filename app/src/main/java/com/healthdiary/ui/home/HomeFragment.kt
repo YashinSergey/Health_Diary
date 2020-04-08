@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.healthdiary.NavGraphDirections
 import com.healthdiary.R
 import com.healthdiary.ui.home.adapters.HomeRVAdapter
 import com.healthdiary.ui.viewmodel.HomeViewModel
@@ -39,9 +40,8 @@ class HomeFragment : Fragment() {
 
     private fun initAdapter(navController: NavController) {
         val adapter = HomeRVAdapter(get()) {
-            val bundle = Bundle()
-            bundle.putInt("IndicatorId", it)
-            navController.navigate(R.id.action_homeFragment_to_indicatorFragment, bundle)
+            val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
+            navController.navigate(action)
         }
         homeViewModel.viewState.observe(viewLifecycleOwner, Observer {
             adapter.itemsList = it
