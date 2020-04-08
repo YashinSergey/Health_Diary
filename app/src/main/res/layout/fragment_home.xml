@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00BCD4"
-    android:orientation="vertical"
-    tools:context=".ui.home.HomeFragment">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        style="@style/MainTextStyle"
+        tools:text="30.03.2020"/>
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="0dp"
+    <TextView
+        android:id="@+id/home_big_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/health_diary_text_all_caps"
+        style="@style/MainTextStyle"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/home_small_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/home_big_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/MainTextStyle"
+        android:text="@string/app_name"
+        android:layout_marginTop="10dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/date"
-            android:textColor="#FFFFFF"
-            android:textSize="44sp" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_home"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:foregroundGravity="center" />
-</LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/home_small_title"
+            style="@style/VerticalFading"
+            android:paddingBottom="88dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
