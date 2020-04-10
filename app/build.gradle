@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 androidExtensions {
     experimental = true
@@ -27,6 +28,11 @@ android {
         }
     }
 
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 }
 
 dependencies {
@@ -48,18 +54,14 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 
-    //Koin for Android Fragment Factory (unstable version)
-    implementation "org.koin:koin-androidx-fragment:$koin_version"
-
     implementation 'com.github.bosphere.android-fadingedgelayout:fadingedgelayout:1.0.0'
-
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.18'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    def nav_version = "2.3.0-alpha04"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     testImplementation "io.mockk:mockk:1.9.3.kotlin12"
     testImplementation 'junit:junit:4.13'
