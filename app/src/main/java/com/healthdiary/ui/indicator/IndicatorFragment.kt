@@ -18,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IndicatorFragment : Fragment() {
 
-    private val layoutRes: Int = R.layout.fragment_entity
     private val model: IndicatorViewModel by viewModel()
     private val fragmentArgs: IndicatorFragmentArgs by navArgs()
 
@@ -31,7 +30,7 @@ class IndicatorFragment : Fragment() {
         model.loadNotes(indicatorId)
         model.viewState.observe(viewLifecycleOwner, Observer {
             initView(it.first, it.second)})
-        return inflater.inflate(layoutRes, container, false)
+        return inflater.inflate(R.layout.fragment_entity, container, false)
     }
 
     private fun initView(indicator: Indicator?, points: Array<DataPoint>?) {
@@ -45,19 +44,14 @@ class IndicatorFragment : Fragment() {
     }
 
     private fun initChart() {
-        // set date label formatter
         chart.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(activity)
-        chart.gridLabelRenderer.numHorizontalLabels = 3 // only 4 because of the space
-
-        // as we use dates as labels, the human rounding to nice readable numbers
-        // is not necessary
+        chart.gridLabelRenderer.numHorizontalLabels = 3
         chart.gridLabelRenderer.setHumanRounding(false)
     }
 
     private fun updateChart(points: Array<DataPoint>) {
         val series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(points)
         chart.addSeries(series)
-        // set manual x bounds to have nice steps
         if (points.isEmpty()) return
 
         chart.viewport.setMinX(points[0].x)
