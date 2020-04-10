@@ -23,5 +23,5 @@
         android:menuCategory="secondary"
         android:checked="false"
         android:color="@color/colorPrimary"
-        android:icon="@drawable/ic_person"/>
+        android:icon="@drawable/ic_profile"/>
 </menu>
