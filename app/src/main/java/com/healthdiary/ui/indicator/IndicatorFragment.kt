@@ -4,22 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.healthdiary.R
 import com.healthdiary.model.entities.Indicator
+import com.healthdiary.model.entities.IndicatorParameter
 import com.healthdiary.ui.viewmodel.IndicatorViewModel
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import kotlinx.android.synthetic.main.fragment_entity.*
+import kotlinx.android.synthetic.main.fragment_indicator.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IndicatorFragment : Fragment() {
 
     private val model: IndicatorViewModel by viewModel()
     private val fragmentArgs: IndicatorFragmentArgs by navArgs()
+    private val parametersMap = HashMap<Int, View>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,17 +36,57 @@ class IndicatorFragment : Fragment() {
         model.loadNotes(indicatorId)
         model.viewState.observe(viewLifecycleOwner, Observer {
             initView(it.first, it.second)})
-        return inflater.inflate(R.layout.fragment_entity, container, false)
+        return inflater.inflate(R.layout.fragment_indicator, container, false)
     }
 
     private fun initView(indicator: Indicator?, points: Array<DataPoint>?) {
         indicator?.let {
             indicator_title.text = indicator.title
-            points?.let {
-                updateChart(it)
+            indicator.parameters?.let { parametersList ->
+                if (parametersList.isEmpty()) {
+                    return
+                }
+                parametersList.forEach {
+                    parametersMap[it.id] = addSpinnerView(it)
+                }
             }
+            points?.let { updateChart(it) }
         }
         initChart()
+    }
+
+    private fun addSpinnerView(indicatorParameter: IndicatorParameter): View {
+
+        val matchParent = LinearLayout.LayoutParams.MATCH_PARENT
+        val wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT
+
+        val parameterView = LinearLayout(context)
+        parameterView.layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+        parameterView.orientation = LinearLayout.HORIZONTAL
+
+        val title = TextView(context)
+        title.layoutParams = LinearLayout.LayoutParams(wrapContent, wrapContent)
+        title.text = indicatorParameter.title
+
+        val spinner = Spinner(context)
+        spinner.layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+        val adapter =
+            context?.let {
+                ArrayAdapter<String>(
+                    it,
+                    android.R.layout.simple_spinner_item,
+                    indicatorParameter.values
+                )
+            }
+        adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        parameterView.addView(title)
+        parameterView.addView(spinner)
+
+        parameters.addView(parameterView)
+
+        return spinner
     }
 
     private fun initChart() {
