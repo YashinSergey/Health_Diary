@@ -15,10 +15,19 @@ object LocalDataSource : Repository {
         Indicator(1, "Height", "cm", 123),
         Indicator(2, "Weight", "kg", 123, listOf(measureTime)),
         Indicator(3, "Sleep", "h", 123),
-        Indicator(4, "Indicator 1", "custom", 123),
-        Indicator(5, "Indicator 2", "custom", 123),
-        Indicator(6, "Indicator 3", "custom", 123, null, false),
-        Indicator(7, "Indicator 4", "custom", 123)
+        Indicator(4, "Indicator 4", "custom", 123),
+        Indicator(5, "Indicator 5", "custom", 123),
+        Indicator(6, "Indicator 6", "custom", 123),
+        Indicator(7, "Indicator 7", "custom", 123),
+        Indicator(8, "Indicator 8", "custom", 123),
+        Indicator(9, "Indicator 9", "custom", 123),
+        Indicator(10, "Indicator 10", "custom", 123),
+        Indicator(11, "Indicator 11", "custom", 123),
+        Indicator(12, "Indicator 12", "custom", 123),
+        Indicator(13, "Indicator 13", "custom", 123),
+        Indicator(14, "Indicator 14", "custom", 123),
+        Indicator(15, "Indicator 15", "custom", 123),
+        Indicator(16, "Indicator 16", "custom", 123)
     )
 
     private val notesForOneDay: MutableList<Note> = mutableListOf(

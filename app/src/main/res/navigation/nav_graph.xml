@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.healthdiary.ui.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home"/>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.healthdiary.ui.calendar.CalendarFragment"
+        android:label="CalendarFragment"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.healthdiary.ui.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/indicatorFragment"
+        android:name="com.healthdiary.ui.indicator.IndicatorFragment"
+        android:label="IndicatorFragment"
+        tools:layout="@layout/fragment_entity" >
+        <argument
+            android:name="indicatorId"
+            app:argType="integer" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_indicatorFragment"
+        app:destination="@id/indicatorFragment"
+        app:enterAnim="@android:anim/slide_in_left"
+        app:exitAnim="@android:anim/slide_out_right"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+</navigation>
