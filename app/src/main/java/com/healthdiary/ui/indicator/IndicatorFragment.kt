@@ -18,10 +18,8 @@ import com.healthdiary.ui.viewmodel.IndicatorViewModel
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import kotlinx.android.synthetic.main.fragment_entity.*
 import kotlinx.android.synthetic.main.fragment_indicator.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class IndicatorFragment : Fragment() {
 
@@ -38,7 +36,7 @@ class IndicatorFragment : Fragment() {
         model.loadNotes(indicatorId)
         model.viewState.observe(viewLifecycleOwner, Observer {
             initView(it.first, it.second)})
-        return inflater.inflate(R.layout.fragment_entity, container, false)
+        return inflater.inflate(R.layout.fragment_indicator, container, false)
     }
 
     private fun initView(indicator: Indicator?, points: Array<DataPoint>?) {
