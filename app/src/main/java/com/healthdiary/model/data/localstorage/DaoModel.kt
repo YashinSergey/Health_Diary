@@ -3,33 +3,35 @@ package com.healthdiary.model.data.localstorage
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.healthdiary.model.data.localstorage.entities.EntityUser
+import com.healthdiary.model.data.localstorage.entities.indicator.EntityIndicator
+import com.healthdiary.model.data.localstorage.entities.note.EntityNote
 import com.healthdiary.model.entities.Indicator
-import com.healthdiary.model.entities.Note
-import com.healthdiary.model.entities.User
+
 import java.util.*
 
 @Dao
 interface DaoModel {
-    @Query("SELECT * FROM EntityIndicator")
-    fun getIndicatorsList()  : List<Indicator>
+    @Query("SELECT * FROM indicators")
+    fun getIndicatorsList()  : List<EntityIndicator>
 
-    @Query("SELECT * FROM EntityIndicator WHERE id == :indicatorId")
-    fun getIndicatorById(indicatorId : Int) : Indicator
+    @Query("SELECT * FROM indicators WHERE id == :indicatorId")
+    fun getIndicatorById(indicatorId : Int) : EntityIndicator
 
-    @Query("SELECT * FROM EntityNote WHERE indicator == :indicatorId")
-    fun getNotesListByIndicatorId(indicatorId : Int) : List<Note>
+    @Query("SELECT * FROM notes WHERE indicator_id == :indicatorId")
+    fun getNotesListByIndicatorId(indicatorId : Int) : List<EntityNote>
 
-    @Query("SELECT * FROM EntityNote WHERE date == :date")
-    fun getNotesByDate(date : Date) : Note
+    @Query("SELECT * FROM notes WHERE date == :date")
+    fun getNotesByDate(date : Long) : List<EntityNote>
 
-    @Query("SELECT * FROM EntityNote WHERE indicator == :indicator ORDER BY date DESC LIMIT 1")
-    fun getCurrentIndicatorsValue(indicator : Indicator) : Float
+//    @Query("SELECT * FROM notes WHERE indicator_id == :indicator ORDER BY date DESC LIMIT 1")
+//    fun getCurrentIndicatorsValue(indicator : Indicator) : Float
 
-    @Query("SELECT TOP (1) FROM EntityUser")
-    fun getProfileInfo() : User
+//    @Query("SELECT TOP (1) FROM EntityUser")
+//    fun getProfileInfo() : EntityUser
 
     @Insert()
-    fun saveNote() : Unit
+    fun saveNote(noteEntry : EntityNote)
 
 
 }

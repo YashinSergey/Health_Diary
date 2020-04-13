@@ -6,10 +6,10 @@ import java.util.*
 
 
 
-@Entity
+@Entity(tableName = "user")
 data class EntityUser(
 
     @PrimaryKey val name: String,
-    val birthday: Date,
+    val birthday: Long,
     val gender: Int
 )

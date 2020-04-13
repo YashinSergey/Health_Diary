@@ -5,11 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.healthdiary.R
+import com.healthdiary.model.data.localstorage.DataBase
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
+import com.healthdiary.model.entities.Note
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.card_item_home_rv.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeRVAdapter(val repository: Repository) : RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
 
@@ -24,7 +28,10 @@ class HomeRVAdapter(val repository: Repository) : RecyclerView.Adapter<HomeRVAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(itemsList?.let { it[position] })
         val itemId : Int = itemsList?.let { it[position].id }!!
-        holder.containerView.setOnClickListener { itemClickSubject.onNext(itemId) }
+        holder.containerView.setOnClickListener { itemClickSubject.onNext(itemId)
+//            val note = Note(1, Date(), itemsList!![position], 100f, "1st")
+//            val dataBase : DataBase = DataBase.getDataBase()!!
+        }
     }
 
     inner class ViewHolder(override val containerView: View) :
