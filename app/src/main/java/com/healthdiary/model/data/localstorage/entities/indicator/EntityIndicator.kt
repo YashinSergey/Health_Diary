@@ -3,6 +3,8 @@ package com.healthdiary.model.data.localstorage.entities.indicator
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
+
 
 @Entity(tableName = "indicators")
 data class EntityIndicator(
