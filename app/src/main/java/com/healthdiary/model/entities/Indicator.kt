@@ -7,4 +7,5 @@ data class Indicator(
     val title: String,
     val unit: String,
     val icon: Int,
+    val parameters: List<IndicatorParameter>? = null,
     val isActive: Boolean = true)

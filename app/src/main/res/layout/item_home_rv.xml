@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CardViewHome"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="25dp"
+    android:layout_marginEnd="25dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:contentDescription="@string/indicators_icon"
+            app:srcCompat="@drawable/ic_add"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
+
+        <TextView
+            android:id="@+id/tv_indicator_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="15dp"
+            style="@style/MainTextStyle"
+            android:letterSpacing="0.01"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:text="Вес"/>
+
+        <TextView
+            android:id="@+id/tv_completion_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/MainTextStyle"
+            app:layout_constraintTop_toBottomOf="@+id/tv_indicator_title"
+            android:text="Заполненено 2 дня назад"
+            android:layout_marginStart="15dp"
+            android:paddingBottom="10dp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/columbia_blue"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tv_indicators_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon"
+            android:layout_marginEnd="22dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:text="65" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

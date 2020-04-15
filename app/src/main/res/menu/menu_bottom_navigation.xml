@@ -2,23 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/bottom_nav_item_home"
+        android:id="@+id/homeFragment"
         android:title="Home"
-        android:color="@color/colorPrimary"
+        android:menuCategory="secondary"
         android:checked="true"
+        android:color="@color/colorPrimary"
         android:icon="@drawable/ic_home"/>
 
     <item
-        android:id="@+id/bottom_nav_item_calendar"
+        android:id="@+id/calendarFragment"
         android:title="Calendar"
-        android:color="@color/colorPrimary"
+        android:menuCategory="secondary"
         android:checked="false"
+        android:color="@color/colorPrimary"
         android:icon="@drawable/ic_calendar"/>
 
     <item
-        android:id="@+id/bottom_nav_item_profile"
+        android:id="@+id/profileFragment"
         android:title="Profile"
-        android:color="@color/colorPrimary"
+        android:menuCategory="secondary"
         android:checked="false"
-        android:icon="@drawable/ic_person"/>
+        android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_profile"/>
 </menu>

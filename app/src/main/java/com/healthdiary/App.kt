@@ -11,6 +11,7 @@ import com.healthdiary.model.data.localstorage.entities.note.EntityNote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import com.healthdiary.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
