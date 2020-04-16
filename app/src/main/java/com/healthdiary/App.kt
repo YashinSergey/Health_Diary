@@ -7,21 +7,10 @@ import com.healthdiary.di.homeModule
 import com.healthdiary.di.profileModule
 import com.healthdiary.model.data.localstorage.DataBase
 import com.healthdiary.model.data.localstorage.LocalDataSource
-import com.healthdiary.model.data.localstorage.dbentities.indicator.EntityIndicator
-import com.healthdiary.model.data.localstorage.dbentities.indicator.EntityIndicatorValues
-import com.healthdiary.model.data.localstorage.dbentities.indicator.parameter.EntityIndicatorParameters
-import com.healthdiary.model.data.localstorage.dbentities.indicator.parameter.EntityParameterValues
-import com.healthdiary.model.data.localstorage.dbentities.note.EntityNote
-import com.healthdiary.model.data.localstorage.dbentities.note.EntityNoteParameters
-import com.healthdiary.model.data.localstorage.dbentities.note.EntityNoteValues
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
 import timber.log.Timber
-import kotlin.random.Random
 
 class App : Application() {
     var db: DataBase? = null
@@ -36,8 +25,12 @@ class App : Application() {
         }
 
         db = DataBase.getDataBase(this.applicationContext)
-
-        LocalDataSource.initMockDBContent(db)
+        val dbFile = applicationContext.getDatabasePath("HealthDiaryDB")
+        if (!dbFile.exists()) {
+            LocalDataSource.initMockDBContent(db)
+        } else {
+            Timber.d("DB already exist")
+        }
     }
 
 
