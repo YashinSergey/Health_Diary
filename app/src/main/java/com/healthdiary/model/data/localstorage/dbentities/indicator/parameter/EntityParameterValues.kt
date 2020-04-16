@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "parameter_values")
-class EntityIParameterValues (
+class EntityParameterValues (
     @PrimaryKey(autoGenerate = true) val id : Int? = null,
     @ColumnInfo(name = "parameter_id") val parameterId : Int,
-    val value : Int
+    val value : String
 )

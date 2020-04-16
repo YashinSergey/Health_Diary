@@ -7,9 +7,12 @@ import java.util.*
 interface Repository {
     fun getNotesByDate(date: Date) : List<Note>
     fun getNotesByIndicatorId(indicatorId: Int?) : List<Note>
-    fun saveNote(note : Note)
     fun getIndicatorById(id: Int?) : Indicator?
     fun getIndicatorList() : List<Indicator>
+
+    fun saveNote(note : Note)
+    fun saveIndicatorValues()
+
 
 
 

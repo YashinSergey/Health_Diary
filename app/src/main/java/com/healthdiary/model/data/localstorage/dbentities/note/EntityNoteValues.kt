@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "note_value")
-class EntityNoteValue (
+class EntityNoteValues (
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo(name = "note_id") val noteID : Int,
     @ColumnInfo(name = "indicator_value_id")val indicatorValueId : Int,
