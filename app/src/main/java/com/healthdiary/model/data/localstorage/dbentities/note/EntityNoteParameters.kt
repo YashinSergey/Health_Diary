@@ -1,4 +1,4 @@
-package com.healthdiary.model.data.localstorage.entities.note
+package com.healthdiary.model.data.localstorage.dbentities.note
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

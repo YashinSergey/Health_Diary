@@ -47,8 +47,12 @@ object LocalDataSource : Repository {
         return notesForOneDay
     }
 
-    override fun getNotesByIndicatorId(id: Int?): List<Note> {
+    override fun getNotesByIndicatorId(indicatorId: Int?): List<Note> {
         return notesOfIndicator
+    }
+
+    override fun saveNote(note: Note) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getIndicatorById(id: Int?): Indicator? {

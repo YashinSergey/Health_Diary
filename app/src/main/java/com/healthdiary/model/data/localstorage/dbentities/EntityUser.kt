@@ -1,9 +1,7 @@
-package com.healthdiary.model.data.localstorage.entities
+package com.healthdiary.model.data.localstorage.dbentities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
-
 
 
 @Entity(tableName = "user")

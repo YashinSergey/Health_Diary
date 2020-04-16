@@ -1,4 +1,4 @@
-package com.healthdiary.model.data.localstorage.entities.note
+package com.healthdiary.model.data.localstorage.dbentities.note
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,7 +7,7 @@ import java.util.*
 
 @Entity(tableName = "notes")
 data class EntityNote(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     @ColumnInfo(name = "indicator_id") val indicatorId: Int,
     val date: Date,
     val comment: String

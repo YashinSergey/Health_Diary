@@ -1,13 +1,9 @@
 package com.healthdiary
 
 import android.app.Application
-import com.healthdiary.di.appModule
-import com.healthdiary.di.calendarModule
-import com.healthdiary.di.homeModule
-import com.healthdiary.di.profileModule
 import com.healthdiary.model.data.localstorage.DataBase
 import com.healthdiary.model.data.localstorage.LocalDataSource
-import com.healthdiary.model.data.localstorage.entities.note.EntityNote
+import com.healthdiary.model.data.localstorage.dbentities.note.EntityNote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -37,6 +33,7 @@ class App : Application() {
             for (note in notes) {
                 val model =
                     EntityNote(
+                        id = null,
                         date = note.date,
                         indicatorId = note.indicator.id,
                         comment = note.comment

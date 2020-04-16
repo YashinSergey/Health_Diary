@@ -3,12 +3,8 @@ package com.healthdiary.model.data.localstorage
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.healthdiary.model.data.localstorage.entities.EntityUser
-import com.healthdiary.model.data.localstorage.entities.indicator.EntityIndicator
-import com.healthdiary.model.data.localstorage.entities.note.EntityNote
-import com.healthdiary.model.entities.Indicator
-
-import java.util.*
+import com.healthdiary.model.data.localstorage.dbentities.indicator.EntityIndicator
+import com.healthdiary.model.data.localstorage.dbentities.note.EntityNote
 
 @Dao
 interface DaoModel {
