@@ -15,12 +15,19 @@ import com.healthdiary.R
 import com.healthdiary.ui.home.adapters.HomeRVAdapter
 import com.healthdiary.ui.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), CoroutineScope{
+
+    override val coroutineContext: CoroutineContext = Dispatchers.IO
 
     private val homeViewModel by viewModel<HomeViewModel>()
 
@@ -38,14 +45,16 @@ class HomeFragment : Fragment() {
         tv_date.text = dateFormat.format(Date())
     }
 
-    private fun initAdapter(navController: NavController) {
+    private  fun initAdapter(navController: NavController) {
         val adapter = HomeRVAdapter(get()) {
             val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
             navController.navigate(action)
         }
-        homeViewModel.viewState.observe(viewLifecycleOwner, Observer {
-            adapter.itemsList = it
-        })
+        launch {
+            homeViewModel.viewState.consumeEach {
+                adapter.itemsList = it
+            }
+        }
         initRecycler(adapter)
     }
 

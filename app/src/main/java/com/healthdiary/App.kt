@@ -27,8 +27,10 @@ class App : Application() {
         db = DataBase.getDataBase(this.applicationContext)
         val dbFile = applicationContext.getDatabasePath("HealthDiaryDB")
         if (!dbFile.exists()) {
-            LocalDataSource.initMockDBContent(db)
+            LocalDataSource.db = db!!
+            LocalDataSource.initMockDBContent()
         } else {
+            LocalDataSource.db = db!!
             Timber.d("DB already exist")
         }
     }

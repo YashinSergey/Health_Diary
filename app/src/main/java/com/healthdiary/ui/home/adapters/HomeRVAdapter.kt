@@ -9,13 +9,25 @@ import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_home_rv.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) : RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
+class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) :
+    RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
 
     var itemsList: List<Indicator>? = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_home_rv, parent, false))
+        ViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_home_rv,
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount(): Int = itemsList?.size ?: 0
 
@@ -26,12 +38,16 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
     }
 
     inner class ViewHolder(override val containerView: View) :
-        RecyclerView.ViewHolder(containerView), LayoutContainer {
+        RecyclerView.ViewHolder(containerView), LayoutContainer, CoroutineScope {
+        override val coroutineContext: CoroutineContext = Dispatchers.IO
 
         fun bind(entity: Indicator?) {
             tv_indicator_title.text = entity?.title
-            tv_indicators_value.text = String.format(
-                "${repository.getNotesByIndicatorId(entity?.id).let { it[it.size-1].value }}")
+            launch {
+                repository.getLastValueByIndicatorId(entity?.id).consumeEach { entity ->
+                    tv_indicators_value.text = "${entity?.let { it.value } ?: 0}"
+                    }
+                }
+            }
         }
     }
-}

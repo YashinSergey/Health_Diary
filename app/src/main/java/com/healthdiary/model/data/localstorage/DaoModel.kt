@@ -10,6 +10,8 @@ import com.healthdiary.model.data.localstorage.dbentities.indicator.parameter.En
 import com.healthdiary.model.data.localstorage.dbentities.note.EntityNote
 import com.healthdiary.model.data.localstorage.dbentities.note.EntityNoteParameters
 import com.healthdiary.model.data.localstorage.dbentities.note.EntityNoteValues
+import com.healthdiary.model.data.localstorage.dbentities.query.EntityLastValueByIndicatorId
+import com.healthdiary.model.entities.Indicator
 
 @Dao
 interface DaoModel {
@@ -26,10 +28,16 @@ interface DaoModel {
     fun getNotesByDate(date : Long) : List<EntityNote>
 
     @Query("SELECT id FROM indicator_parameters WHERE indicator_id == :indicatorId")
-    fun getIndicatorParametersID(indicatorId : Int) : Int
+    fun getIndicatorParametersID(indicatorId : Int) : List<Int>
 
     @Query("SELECT id FROM indicator_values WHERE indicator_id == :indicatorId")
     fun getIdIndicatorValuesByIndicatorId(indicatorId : Int) : List<Int>
+
+    @Query("SELECT value FROM parameter_values WHERE parameter_id == :parameterId")
+    fun getParameterValuesByParametersId(parameterId : Int) : List<String>
+
+    @Query("SELECT notes.date, note_values.value, note_values.indicator_value_id FROM notes  inner join note_values on notes.id = note_values.note_id and notes.indicator_id == :indicatorId ORDER BY notes.date")
+    fun getLastValueByIndicatorId(indicatorId : Int?) : List<EntityLastValueByIndicatorId>
 
     @Insert()
     fun saveNote(noteEntry : EntityNote)

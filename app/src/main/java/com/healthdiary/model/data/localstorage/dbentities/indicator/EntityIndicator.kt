@@ -10,6 +10,6 @@ data class EntityIndicator(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val title: String,
     val unit: String,
-    val iconRes: Int,
+    @ColumnInfo(name = "icon") val icon: Int,
     @ColumnInfo(name = "is_active") val isActive: Boolean
 )
