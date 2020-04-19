@@ -1,10 +1,7 @@
 package com.healthdiary
 
 import android.app.Application
-import com.healthdiary.di.appModule
-import com.healthdiary.di.calendarModule
-import com.healthdiary.di.homeModule
-import com.healthdiary.di.profileModule
+import com.healthdiary.di.*
 import com.healthdiary.model.data.localstorage.DataBase
 import com.healthdiary.model.data.localstorage.LocalDataSource
 import org.koin.android.ext.koin.androidContext
@@ -21,7 +18,7 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             fragmentFactory()
-            modules(listOf(appModule, homeModule, calendarModule, profileModule))
+            modules(listOf(appModule, homeModule, calendarModule, profileModule, indicatorModule))
         }
 
         db = DataBase.getDataBase(this.applicationContext)

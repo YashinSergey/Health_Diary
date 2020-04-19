@@ -8,8 +8,8 @@ import java.util.*
 
 interface Repository {
     fun getNotesByDate(date: Date) : List<Note>
-    fun getNotesByIndicatorId(indicatorId: Int?) : List<Note>
-    fun getIndicatorById(id: Int?) : Indicator?
+    suspend fun getNotesByIndicator(indicator: Indicator?) : ReceiveChannel<List<Note>>
+    suspend fun getIndicatorById(id: Int?) : ReceiveChannel<Indicator?>
     suspend fun getIndicatorList() : ReceiveChannel<List<Indicator>>
     suspend fun getLastValueByIndicatorId(id : Int?) : ReceiveChannel<EntityLastValueByIndicatorId?>
 

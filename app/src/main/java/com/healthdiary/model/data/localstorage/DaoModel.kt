@@ -11,6 +11,7 @@ import com.healthdiary.model.data.localstorage.dbentities.note.EntityNote
 import com.healthdiary.model.data.localstorage.dbentities.note.EntityNoteParameters
 import com.healthdiary.model.data.localstorage.dbentities.note.EntityNoteValues
 import com.healthdiary.model.data.localstorage.dbentities.query.EntityLastValueByIndicatorId
+import com.healthdiary.model.data.localstorage.dbentities.query.EntityNoteForDataPoint
 import com.healthdiary.model.entities.Indicator
 
 @Dao
@@ -21,8 +22,8 @@ interface DaoModel {
     @Query("SELECT * FROM indicators WHERE id == :indicatorId")
     fun getIndicatorById(indicatorId : Int) : EntityIndicator
 
-    @Query("SELECT * FROM notes WHERE indicator_id == :indicatorId")
-    fun getNotesListByIndicatorId(indicatorId : Int) : List<EntityNote>
+    @Query("SELECT notes.date, note_values.indicator_value_id, note_values.value FROM notes inner join note_values on notes.id = note_values.note_id and notes.indicator_id == :indicatorId")
+    fun getNotesByIndicatorId(indicatorId : Int?) : List<EntityNoteForDataPoint>
 
     @Query("SELECT * FROM notes WHERE date == :date")
     fun getNotesByDate(date : Long) : List<EntityNote>

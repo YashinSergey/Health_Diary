@@ -19,9 +19,15 @@ import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_indicator.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.coroutines.CoroutineContext
 
 class IndicatorFragment : Fragment() {
+
 
     private val model: IndicatorViewModel by viewModel()
     private val fragmentArgs: IndicatorFragmentArgs by navArgs()
@@ -32,10 +38,7 @@ class IndicatorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val indicatorId = fragmentArgs.indicatorId
-        model.loadNotes(indicatorId)
-        model.viewState.observe(viewLifecycleOwner, Observer {
-            initView(it.first, it.second)})
+        consumeViewState(fragmentArgs.indicatorId)
         return inflater.inflate(R.layout.fragment_indicator, container, false)
     }
 
@@ -103,5 +106,14 @@ class IndicatorFragment : Fragment() {
         chart.viewport.setMinX(points[0].x)
         chart.viewport.setMaxX(points[points.size - 1].x)
         chart.viewport.isXAxisBoundsManual = true
+    }
+
+    private fun consumeViewState(indicatorId : Int){
+        model.indicatorId = indicatorId
+        CoroutineScope(Dispatchers.IO).launch {
+            model.viewState.consumeEach {
+                initView(it.first, it.second)
+            }
+        }
     }
 }

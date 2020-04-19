@@ -21,6 +21,8 @@ import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
 object LocalDataSource : Repository, CoroutineScope {
@@ -28,7 +30,7 @@ object LocalDataSource : Repository, CoroutineScope {
     lateinit var db: DataBase
 
     private val measureTime = IndicatorParameter(
-        1, "HZ CHTO ZAGLUSHKA",
+        1, "measure time",
         listOf("before meal", "after meal")
     )
 
@@ -100,48 +102,63 @@ object LocalDataSource : Repository, CoroutineScope {
         return notesForOneDay
     }
 
-    override fun getNotesByIndicatorId(indicatorId: Int?): List<Note> {
-        return notesOfIndicator
+    override suspend fun getNotesByIndicator(indicator: Indicator?): ReceiveChannel<List<Note>> =  Channel<List<Note>>(Channel.CONFLATED).apply{
+        val listEntityNotes = db.daoModel().getNotesByIndicatorId(indicator?.id)
+        val listNotes = ArrayList<Note>()
+        for(entity in listEntityNotes){
+            listNotes.add(Note(
+                id = entity.id!!,
+                date = entity.date,
+                indicator = indicator!!,
+                value = entity.value
+            ))
+        }
+        send(listNotes)
     }
 
 
-    override fun getIndicatorById(id: Int?): Indicator? {
-        indicatorList.forEach { indicator ->
-            if (indicator.id == id)
-                return indicator
+    override suspend fun getIndicatorById(id: Int?): ReceiveChannel<Indicator?> = Channel<Indicator?>(Channel.CONFLATED).apply{
+        val entityIndicator = db.daoModel().getIndicatorById(id!!)
+        entityIndicator?.let{
+            val indicator = Indicator(
+                id = entityIndicator.id!!,
+                title = entityIndicator.title,
+                unit = entityIndicator.unit,
+                icon = entityIndicator.icon,
+                isActive = entityIndicator.isActive
+            )
+            send(indicator)
         }
-        return null
+
     }
 
     override suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>> =
         Channel<List<Indicator>>(Channel.CONFLATED).apply {
-            launch {
-                val entityIndicatorList = db.daoModel().getIndicatorsList()
-                val indicatorList = ArrayList<Indicator>()
-                for (entityIndicator in entityIndicatorList) {
-                    val indicator = Indicator(
-                        id = entityIndicator.id!!,
-                        title = entityIndicator.title,
-                        unit = entityIndicator.unit,
-                        icon = entityIndicator.icon,
-                        parameters = null,
-                        isActive = entityIndicator.isActive
-                    )
-                    val listIndicatorParameters = ArrayList<IndicatorParameter>()
-                    val listParametersid = db.daoModel().getIndicatorParametersID(indicator.id)
-                    for (parametersId in listParametersid) {
-                        val listValue = db.daoModel().getParameterValuesByParametersId(parametersId)
-                        listIndicatorParameters.add(
-                            IndicatorParameter(
-                                parametersId,
-                                "HZ CHTO",
-                                listValue
-                            )
+            val entityIndicatorList = db.daoModel().getIndicatorsList()
+            val indicatorList = ArrayList<Indicator>()
+            for (entityIndicator in entityIndicatorList) {
+                val indicator = Indicator(
+                    id = entityIndicator.id!!,
+                    title = entityIndicator.title,
+                    unit = entityIndicator.unit,
+                    icon = entityIndicator.icon,
+                    parameters = null,
+                    isActive = entityIndicator.isActive
+                )
+                val listIndicatorParameters = ArrayList<IndicatorParameter>()
+                val listParametersid = db.daoModel().getIndicatorParametersID(indicator.id)
+                for (parametersId in listParametersid) {
+                    val listValue = db.daoModel().getParameterValuesByParametersId(parametersId)
+                    listIndicatorParameters.add(
+                        IndicatorParameter(
+                            parametersId,
+                            "HZ CHTO",
+                            listValue
                         )
-                    }
-                    indicator.parameters = listIndicatorParameters as List<IndicatorParameter>
-                    indicatorList.add(indicator)
+                    )
                 }
+                indicator.parameters = listIndicatorParameters as List<IndicatorParameter>
+                indicatorList.add(indicator)
                 send(indicatorList)
             }
         }
@@ -228,7 +245,7 @@ object LocalDataSource : Repository, CoroutineScope {
             //endregion
 
             //region Added notes and parameters for them
-            val notes = getNotesByIndicatorId(1)
+            val notes = notesOfIndicator
             for (note in notes) {
                 val modelNote =
                     EntityNote(
@@ -269,6 +286,4 @@ object LocalDataSource : Repository, CoroutineScope {
             Timber.d("Saving mock content done")
         }
     }
-
-
 }
