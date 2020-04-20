@@ -21,8 +21,6 @@ import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
 object LocalDataSource : Repository, CoroutineScope {
@@ -102,35 +100,39 @@ object LocalDataSource : Repository, CoroutineScope {
         return notesForOneDay
     }
 
-    override suspend fun getNotesByIndicator(indicator: Indicator?): ReceiveChannel<List<Note>> =  Channel<List<Note>>(Channel.CONFLATED).apply{
-        val listEntityNotes = db.daoModel().getNotesByIndicatorId(indicator?.id)
-        val listNotes = ArrayList<Note>()
-        for(entity in listEntityNotes){
-            listNotes.add(Note(
-                id = entity.id!!,
-                date = entity.date,
-                indicator = indicator!!,
-                value = entity.value
-            ))
-        }
-        send(listNotes)
-    }
-
-
-    override suspend fun getIndicatorById(id: Int?): ReceiveChannel<Indicator?> = Channel<Indicator?>(Channel.CONFLATED).apply{
-        val entityIndicator = db.daoModel().getIndicatorById(id!!)
-        entityIndicator?.let{
-            val indicator = Indicator(
-                id = entityIndicator.id!!,
-                title = entityIndicator.title,
-                unit = entityIndicator.unit,
-                icon = entityIndicator.icon,
-                isActive = entityIndicator.isActive
-            )
-            send(indicator)
+    override suspend fun getNotesByIndicator(indicator: Indicator?): ReceiveChannel<List<Note>> =
+        Channel<List<Note>>(Channel.CONFLATED).apply {
+            val listEntityNotes = db.daoModel().getNotesByIndicatorId(indicator?.id)
+            val listNotes = ArrayList<Note>()
+            for (entity in listEntityNotes) {
+                listNotes.add(
+                    Note(
+                        id = entity.id!!,
+                        date = entity.date,
+                        indicator = indicator!!,
+                        value = entity.value
+                    )
+                )
+            }
+            send(listNotes)
         }
 
-    }
+
+    override suspend fun getIndicatorById(id: Int?): ReceiveChannel<Indicator?> =
+        Channel<Indicator?>(Channel.CONFLATED).apply {
+            val entityIndicator = db.daoModel().getIndicatorById(id!!)
+            entityIndicator?.let {
+                val indicator = Indicator(
+                    id = entityIndicator.id!!,
+                    title = entityIndicator.title,
+                    unit = entityIndicator.unit,
+                    icon = entityIndicator.icon,
+                    isActive = entityIndicator.isActive
+                )
+                send(indicator)
+            }
+
+        }
 
     override suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>> =
         Channel<List<Indicator>>(Channel.CONFLATED).apply {
@@ -172,6 +174,36 @@ object LocalDataSource : Repository, CoroutineScope {
                 send(listValue[0])
             }
         }
+
+    override suspend fun saveNewNote(note: Note) {
+        db.daoModel().saveNote(
+            EntityNote(
+                id = null,
+                indicatorId = note.indicator.id,
+                date = Date(),
+                comment = note.comment
+            )
+        )
+        val listNoteId = db.daoModel().getNotesIdOrderByDate()
+        val parameterValueId = db.daoModel().getParameterValuesIdByParametersId(note.parameters?.get(0)?.first?.id)[0]
+        db.daoModel().saveNoteParameters(
+            EntityNoteParameters(
+                id = null,
+                noteId = listNoteId[listNoteId.size - 1],
+                parameterId = note.parameters?.get(0)?.first?.id!!,
+                parameterValueId = parameterValueId
+            )
+        )
+        val indicatorValuesId = db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
+        db.daoModel().saveNoteValues(
+            EntityNoteValues(
+                id = null,
+                noteID = listNoteId[listNoteId.size - 1],
+                indicatorValueId = indicatorValuesId[0],
+                value = note.value
+                )
+        )
+    }
 
     fun initMockDBContent() {
         launch {

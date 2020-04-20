@@ -10,5 +10,5 @@ class EntityNoteParameters (
     @PrimaryKey (autoGenerate = true) val id : Int? = null,
     @ColumnInfo(name = "note_id") val noteId : Int,
     @ColumnInfo(name = "parameter_id") val parameterId : Int,
-    @ColumnInfo(name = "parameter_valueid") val parameterValueId : Int
+    @ColumnInfo(name = "parameter_valueid") val parameterValueId : Int?
 )

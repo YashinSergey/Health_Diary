@@ -35,10 +35,16 @@ interface DaoModel {
     fun getIdIndicatorValuesByIndicatorId(indicatorId : Int) : List<Int>
 
     @Query("SELECT value FROM parameter_values WHERE parameter_id == :parameterId")
-    fun getParameterValuesByParametersId(parameterId : Int) : List<String>
+    fun getParameterValuesByParametersId(parameterId : Int?) : List<String>
+
+    @Query("SELECT value FROM parameter_values WHERE parameter_id == :parameterId")
+    fun getParameterValuesIdByParametersId(parameterId : Int?) : List<Int>
 
     @Query("SELECT notes.date, note_values.value, note_values.indicator_value_id FROM notes  inner join note_values on notes.id = note_values.note_id and notes.indicator_id == :indicatorId ORDER BY notes.date")
     fun getLastValueByIndicatorId(indicatorId : Int?) : List<EntityLastValueByIndicatorId>
+
+    @Query("SELECT id FROM notes ORDER BY date")
+    fun getNotesIdOrderByDate() : List<Int>
 
     @Insert()
     fun saveNote(noteEntry : EntityNote)

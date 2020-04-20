@@ -17,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
 
 class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) :
     RecyclerView.Adapter<HomeRVAdapter.ViewHolder>(), CoroutineScope {
-    
+
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
 

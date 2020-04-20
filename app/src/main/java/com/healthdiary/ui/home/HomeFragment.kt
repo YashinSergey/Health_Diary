@@ -48,7 +48,6 @@ class HomeFragment : Fragment(), CoroutineScope{
             val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
             navController.navigate(action)
         }
-        Timber.d("AdapterList size is ${HomeRVAdapter.itemsList?.size}")
         initAdapterList(navController)
         tv_date.text = dateFormat.format(Date())
     }
