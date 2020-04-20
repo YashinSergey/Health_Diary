@@ -16,30 +16,22 @@ import kotlin.coroutines.CoroutineContext
 
 class IndicatorViewModel(private val repository: Repository) : ViewModel(), CoroutineScope{
 
-    override val coroutineContext: CoroutineContext = Dispatchers.Default
+    override val coroutineContext: CoroutineContext = Dispatchers.IO
 
     var indicatorId = 0
 
     val viewState : ReceiveChannel<Pair<Indicator?, Array<DataPoint>>> = Channel<Pair<Indicator?, Array<DataPoint>>>(Channel.CONFLATED).apply {
         launch {
             var chartSeries : Array<DataPoint>
-            var indicator : Indicator? = null
-            repository.getIndicatorById(indicatorId).consumeEach {
-                indicator = it
-            }
+            val indicator  = repository.getIndicatorById(indicatorId)
             repository.getNotesByIndicator(indicator).consumeEach {
                 chartSeries = getChartSeries(it)
                 send(Pair(indicator,chartSeries))
-            }
+4            }
 
 
         }
     }
-
-//    fun loadNotes(indicatorId: Int?) {
-//        val chartSeries = getChartSeries(repository.getNotesByIndicator(indicator))
-//        viewState.value = Pair(repository.getIndicatorById(indicatorId), chartSeries)
-//    }
 
     private fun getChartSeries(notes: List<Note>): Array<DataPoint> {
         return Array(notes.size) {

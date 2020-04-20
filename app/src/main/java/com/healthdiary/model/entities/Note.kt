@@ -3,7 +3,7 @@ package com.healthdiary.model.entities
 import java.util.*
 
 data class Note(
-    val id: Int,
+    val id: Int? = null,
     val date: Date,
     val indicator: Indicator,
     val value: Float,

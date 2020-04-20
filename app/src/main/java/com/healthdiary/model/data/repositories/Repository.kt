@@ -9,7 +9,7 @@ import java.util.*
 interface Repository {
     fun getNotesByDate(date: Date): List<Note>
     suspend fun getNotesByIndicator(indicator: Indicator?): ReceiveChannel<List<Note>>
-    suspend fun getIndicatorById(id: Int?): ReceiveChannel<Indicator?>
+    suspend fun getIndicatorById(id: Int?): Indicator?
     suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>>
     suspend fun getLastValueByIndicatorId(id: Int?): ReceiveChannel<EntityLastValueByIndicatorId?>
     suspend fun saveNewNote(note: Note): Unit

@@ -58,37 +58,29 @@ object LocalDataSource : Repository, CoroutineScope {
     )
 
     private val notesOfIndicator: MutableList<Note> = mutableListOf(
-        Note(
-            1,
-            GregorianCalendar(2020, 2, 1).time,
-            indicatorList[1],
-            150f,
-            listOf(Pair(measureTime, "before meal")),
-            "ok"
-        ),
-        Note(
-            2,
-            GregorianCalendar(2020, 2, 2).time,
-            indicatorList[0],
-            70f,
-            listOf(Pair(measureTime, "after meal")),
-            "everything bad, life is sucks"
-        ),
-        Note(
-            3,
-            GregorianCalendar(2020, 2, 3).time,
-            indicatorList[1],
-            60f,
-            listOf(Pair(measureTime, "before meal"))
-        ),
-        Note(
-            4,
-            GregorianCalendar(2020, 2, 4).time,
-            indicatorList[2],
-            59f,
-            listOf(Pair(measureTime, "before meal"))
+        Note(id = 1,date = GregorianCalendar(2020, 2, 11).time,indicator = indicatorList[1],value = 50f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 2,date = GregorianCalendar(2020, 2, 12).time,indicator = indicatorList[2],value = 70f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 3,date = GregorianCalendar(2020, 2, 13).time,indicator = indicatorList[3],value = 80f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 4,date = GregorianCalendar(2020, 2, 11).time,indicator = indicatorList[4],value = 90f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 5,date = GregorianCalendar(2020, 2, 10).time,indicator = indicatorList[5],value = 54f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 6,date = GregorianCalendar(2020, 2, 13).time,indicator = indicatorList[6],value = 45f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 7,date = GregorianCalendar(2020, 2, 15).time,indicator = indicatorList[7],value = 58f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 8,date = GregorianCalendar(2020, 2, 12).time,indicator = indicatorList[8],value = 85f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 9,date = GregorianCalendar(2020, 2, 11).time,indicator = indicatorList[9],value = 43f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 10,date = GregorianCalendar(2020, 2, 15).time,indicator = indicatorList[10],value = 56f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 11,date = GregorianCalendar(2020, 2, 17).time,indicator = indicatorList[11],value = 75f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 12,date = GregorianCalendar(2020, 2, 13).time,indicator = indicatorList[12],value = 32f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 13,date = GregorianCalendar(2020, 2, 14).time,indicator = indicatorList[13],value = 56f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 14,date = GregorianCalendar(2020, 2, 15).time,indicator = indicatorList[14],value = 68f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 15,date = GregorianCalendar(2020, 2, 16).time,indicator = indicatorList[15],value = 93f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 16,date = GregorianCalendar(2020, 2, 12).time,indicator = indicatorList[1],value = 46f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 17,date = GregorianCalendar(2020, 2, 13).time,indicator = indicatorList[2],value = 75f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 18,date = GregorianCalendar(2020, 2, 15).time,indicator = indicatorList[3],value = 56f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 19,date = GregorianCalendar(2020, 2, 16).time,indicator = indicatorList[4],value = 59f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 20,date = GregorianCalendar(2020, 2, 15).time,indicator = indicatorList[0],value = 65f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok"),
+        Note(id = 21,date = GregorianCalendar(2020, 2, 17).time,indicator = indicatorList[0],value = 70f,parameters = listOf(Pair(measureTime, "before meal")),comment = "ok")
+
         )
-    )
 
     //mock для первичного наполнения БД
     fun getStartIndicatorList(): List<Indicator> {
@@ -118,21 +110,19 @@ object LocalDataSource : Repository, CoroutineScope {
         }
 
 
-    override suspend fun getIndicatorById(id: Int?): ReceiveChannel<Indicator?> =
-        Channel<Indicator?>(Channel.CONFLATED).apply {
-            val entityIndicator = db.daoModel().getIndicatorById(id!!)
-            entityIndicator?.let {
-                val indicator = Indicator(
-                    id = entityIndicator.id!!,
-                    title = entityIndicator.title,
-                    unit = entityIndicator.unit,
-                    icon = entityIndicator.icon,
-                    isActive = entityIndicator.isActive
-                )
-                send(indicator)
-            }
-
+    override suspend fun getIndicatorById(id: Int?): Indicator? {
+        val entityIndicator = db.daoModel().getIndicatorById(id!!)
+        entityIndicator?.let {
+            return Indicator(
+                id = entityIndicator.id!!,
+                title = entityIndicator.title,
+                unit = entityIndicator.unit,
+                icon = entityIndicator.icon,
+                isActive = entityIndicator.isActive
+            )
         }
+    }
+
 
     override suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>> =
         Channel<List<Indicator>>(Channel.CONFLATED).apply {
@@ -185,7 +175,8 @@ object LocalDataSource : Repository, CoroutineScope {
             )
         )
         val listNoteId = db.daoModel().getNotesIdOrderByDate()
-        val parameterValueId = db.daoModel().getParameterValuesIdByParametersId(note.parameters?.get(0)?.first?.id)[0]
+        val parameterValueId =
+            db.daoModel().getParameterValuesIdByParametersId(note.parameters?.get(0)?.first?.id)[0]
         db.daoModel().saveNoteParameters(
             EntityNoteParameters(
                 id = null,
@@ -194,14 +185,15 @@ object LocalDataSource : Repository, CoroutineScope {
                 parameterValueId = parameterValueId
             )
         )
-        val indicatorValuesId = db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
+        val indicatorValuesId =
+            db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
         db.daoModel().saveNoteValues(
             EntityNoteValues(
                 id = null,
                 noteID = listNoteId[listNoteId.size - 1],
                 indicatorValueId = indicatorValuesId[0],
                 value = note.value
-                )
+            )
         )
     }
 
@@ -294,7 +286,7 @@ object LocalDataSource : Repository, CoroutineScope {
                     for (indicatorValueId in it) {
                         val modelNoteValues = EntityNoteValues(
                             id = null,
-                            noteID = note.id,
+                            noteID = note.id!!,
                             indicatorValueId = indicatorValueId,
                             value = Random.nextInt(100).toFloat()
                         )
@@ -306,7 +298,7 @@ object LocalDataSource : Repository, CoroutineScope {
                 val mockParameterValueId = 1
                 val modelNoteParameters = EntityNoteParameters(
                     id = null,
-                    noteId = note.id,
+                    noteId = note.id!!,
                     parameterId = mockIndicatorParameterId,
                     parameterValueId = mockParameterValueId
                 )

@@ -38,8 +38,13 @@ class IndicatorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        consumeViewState(fragmentArgs.indicatorId)
+
         return inflater.inflate(R.layout.fragment_indicator, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        consumeViewState(fragmentArgs.indicatorId)
     }
 
     private fun initView(indicator: Indicator?, points: Array<DataPoint>?) {

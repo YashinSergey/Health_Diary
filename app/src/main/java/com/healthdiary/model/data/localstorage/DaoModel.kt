@@ -37,7 +37,7 @@ interface DaoModel {
     @Query("SELECT value FROM parameter_values WHERE parameter_id == :parameterId")
     fun getParameterValuesByParametersId(parameterId : Int?) : List<String>
 
-    @Query("SELECT value FROM parameter_values WHERE parameter_id == :parameterId")
+    @Query("SELECT id FROM parameter_values WHERE parameter_id == :parameterId")
     fun getParameterValuesIdByParametersId(parameterId : Int?) : List<Int>
 
     @Query("SELECT notes.date, note_values.value, note_values.indicator_value_id FROM notes  inner join note_values on notes.id = note_values.note_id and notes.indicator_id == :indicatorId ORDER BY notes.date")
