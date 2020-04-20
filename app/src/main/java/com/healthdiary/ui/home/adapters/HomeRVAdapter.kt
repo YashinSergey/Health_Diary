@@ -16,9 +16,15 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) :
-    RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
+    RecyclerView.Adapter<HomeRVAdapter.ViewHolder>(), CoroutineScope {
+    
+    override val coroutineContext: CoroutineContext = Dispatchers.IO
 
-    var itemsList: List<Indicator>? = ArrayList()
+
+    companion object{
+        var itemsList: List<Indicator>? = ArrayList()
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
@@ -38,8 +44,7 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
     }
 
     inner class ViewHolder(override val containerView: View) :
-        RecyclerView.ViewHolder(containerView), LayoutContainer, CoroutineScope {
-        override val coroutineContext: CoroutineContext = Dispatchers.IO
+        RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(entity: Indicator?) {
             tv_indicator_title.text = entity?.title

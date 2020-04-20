@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +20,7 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -31,28 +31,32 @@ class HomeFragment : Fragment(), CoroutineScope{
 
     private val homeViewModel by viewModel<HomeViewModel>()
 
+    lateinit var adapter: HomeRVAdapter
+
     @SuppressLint("SimpleDateFormat")
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = view.findNavController()
-        initAdapter(navController)
-        tv_date.text = dateFormat.format(Date())
-    }
-
-    private  fun initAdapter(navController: NavController) {
-        val adapter = HomeRVAdapter(get()) {
+        adapter = HomeRVAdapter(get()) {
             val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
             navController.navigate(action)
         }
+        Timber.d("AdapterList size is ${HomeRVAdapter.itemsList?.size}")
+        initAdapterList(navController)
+        tv_date.text = dateFormat.format(Date())
+    }
+
+    private  fun initAdapterList(navController: NavController) {
         launch {
             homeViewModel.viewState.consumeEach {
-                adapter.itemsList = it
+                HomeRVAdapter.itemsList = it
             }
         }
         initRecycler(adapter)
