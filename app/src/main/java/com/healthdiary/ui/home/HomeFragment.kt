@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.healthdiary.NavGraphDirections
 import com.healthdiary.R
 import com.healthdiary.ui.home.adapters.HomeRVAdapter
@@ -16,53 +16,52 @@ import com.healthdiary.ui.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class HomeFragment : Fragment(), CoroutineScope{
+class HomeFragment : Fragment(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
     private val homeViewModel by viewModel<HomeViewModel>()
 
-    lateinit var adapter: HomeRVAdapter
+    private val RV: RecyclerView by lazy { rv_home }
+    val adapter: HomeRVAdapter by lazy {
+        val navController = view?.findNavController()
+        HomeRVAdapter(get()) {
+            val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
+            navController?.navigate(action)
+        }
+    }
 
     @SuppressLint("SimpleDateFormat")
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navController = view.findNavController()
-        adapter = HomeRVAdapter(get()) {
-            val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
-            navController.navigate(action)
-        }
-        initAdapterList(navController)
+        initRecycler()
         tv_date.text = dateFormat.format(Date())
     }
 
-    private  fun initAdapterList(navController: NavController) {
-        launch {
-            homeViewModel.viewState.consumeEach {
-                HomeRVAdapter.itemsList = it
-            }
-        }
-        initRecycler(adapter)
-    }
 
-    private fun initRecycler(adapter: HomeRVAdapter) {
-        rv_home.layoutManager = LinearLayoutManager(this.context)
-        rv_home.adapter = adapter
+    private fun initRecycler() {
+        homeViewModel.viewState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            HomeRVAdapter.itemsList = it
+        })
+        RV.layoutManager = LinearLayoutManager(this.context)
+        RV.adapter = adapter
+
     }
 }

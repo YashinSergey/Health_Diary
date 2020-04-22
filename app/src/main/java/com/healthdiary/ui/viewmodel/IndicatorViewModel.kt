@@ -27,7 +27,7 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel(), Coro
             repository.getNotesByIndicator(indicator).consumeEach {
                 chartSeries = getChartSeries(it)
                 send(Pair(indicator,chartSeries))
-4            }
+            }
 
 
         }

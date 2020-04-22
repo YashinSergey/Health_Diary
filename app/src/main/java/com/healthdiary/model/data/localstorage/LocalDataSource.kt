@@ -99,7 +99,7 @@ object LocalDataSource : Repository, CoroutineScope {
             for (entity in listEntityNotes) {
                 listNotes.add(
                     Note(
-                        id = entity.id!!,
+                        id = entity.id,
                         date = entity.date,
                         indicator = indicator!!,
                         value = entity.value
@@ -112,7 +112,7 @@ object LocalDataSource : Repository, CoroutineScope {
 
     override suspend fun getIndicatorById(id: Int?): Indicator? {
         val entityIndicator = db.daoModel().getIndicatorById(id!!)
-        entityIndicator?.let {
+        entityIndicator.let {
             return Indicator(
                 id = entityIndicator.id!!,
                 title = entityIndicator.title,
@@ -149,7 +149,7 @@ object LocalDataSource : Repository, CoroutineScope {
                         )
                     )
                 }
-                indicator.parameters = listIndicatorParameters as List<IndicatorParameter>
+                indicator.parameters = listIndicatorParameters
                 indicatorList.add(indicator)
                 send(indicatorList)
             }

@@ -20,11 +20,9 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
 
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
-
-    companion object{
+    companion object {
         var itemsList: List<Indicator>? = ArrayList()
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
@@ -51,8 +49,8 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
             launch {
                 repository.getLastValueByIndicatorId(entity?.id).consumeEach { entity ->
                     tv_indicators_value.text = "${entity?.let { it.value } ?: 0}"
-                    }
                 }
             }
         }
     }
+}

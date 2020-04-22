@@ -17,7 +17,7 @@ val appModule = module{
 }
 
 val homeModule = module {
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel() }
 }
 
 val calendarModule = module {
