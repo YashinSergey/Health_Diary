@@ -33,10 +33,10 @@ object LocalDataSource : Repository, CoroutineScope {
     )
 
     private val indicatorList: MutableList<Indicator> = mutableListOf(
-        Indicator(1, "Height", "cm", 123),
-        Indicator(2, "Weight", "kg", 123, listOf(measureTime)),
-        Indicator(3, "Sleep", "h", 123),
-        Indicator(4, "Pressure", "custom", 123),
+        Indicator(1, "Height", "cm", 199),
+        Indicator(2, "Weight", "kg", 100, listOf(measureTime)),
+        Indicator(3, "Sleep", "h", 101),
+        Indicator(4, "Pressure", "custom", 102),
         Indicator(5, "Indicator 17", "custom", 123),
         Indicator(6, "Indicator 6", "custom", 123),
         Indicator(7, "Indicator 7", "custom", 123),

@@ -46,6 +46,14 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
 
         fun bind(entity: Indicator?) {
             tv_indicator_title.text = entity?.title
+            when(entity?.icon){
+                100 -> icon.setImageResource(R.drawable.ic_bathroom_scales)
+                101 -> icon.setImageResource(R.drawable.ic_hospital_bed)
+                102 -> icon.setImageResource(R.drawable.ic_health_thermometer)
+                199 -> icon.setImageResource(R.drawable.ic_skull_and_crossbones)
+                else -> icon.setImageResource(R.drawable.ic_eye_closeup)
+            }
+            icon.drawable
             launch {
                 repository.getLastValueByIndicatorId(entity?.id).consumeEach { entity ->
                     tv_indicators_value.text = "${entity?.let { it.value } ?: 0}"
