@@ -6,4 +6,5 @@
     <string name="calendar">Календарь</string>
     <string name="home">Главная</string>
     <string name="health_diary_text_all_caps">ДНЕВНИК ЗДОРОВЬЯ</string>
+    <string name="indicators_add">add value</string>
 </resources>
