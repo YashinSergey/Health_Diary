@@ -9,4 +9,5 @@ interface Repository {
     fun getNotesByIndicatorId(id: Int?) : List<Note>
     fun getIndicatorById(id: Int?) : Indicator?
     fun getIndicatorList() : List<Indicator>
+    fun saveNote(indicatorId: Int, values: List<Float>, parameters: List<Pair<Int, String>>?) : Boolean
 }

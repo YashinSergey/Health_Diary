@@ -4,16 +4,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
+import com.healthdiary.model.entities.IndicatorParameter
 import com.healthdiary.model.entities.Note
 import com.jjoe64.graphview.series.DataPoint
 
 class IndicatorViewModel(private val repository: Repository) : ViewModel() {
 
-    val viewState = MutableLiveData<Pair<Indicator?, Array<DataPoint>>>()
+    val indicatorViewState = MutableLiveData<Indicator?>()
+    val chartViewState = MutableLiveData<Array<DataPoint>>()
+    val rvViewState = MutableLiveData<List<Note>>()
+
+    fun loadIndicatorInfo(indicatorId: Int?) {
+        indicatorViewState.value = repository.getIndicatorById(indicatorId)
+    }
 
     fun loadNotes(indicatorId: Int?) {
-        val chartSeries = getChartSeries(repository.getNotesByIndicatorId(indicatorId))
-        viewState.value = Pair(repository.getIndicatorById(indicatorId), chartSeries)
+        val notes = repository.getNotesByIndicatorId(indicatorId)
+        chartViewState.value = getChartSeries(notes)
+        rvViewState.value = notes
     }
 
     private fun getChartSeries(notes: List<Note>): Array<DataPoint> {
@@ -21,5 +29,13 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel() {
             val currentNote = notes[it]
             DataPoint(currentNote.date, currentNote.value.toDouble())
         }
+    }
+
+    fun saveNote(indicatorId: Int, values: List<Float>, parameters: List<Pair<Int, String>>? = null) : Boolean {
+        val resultSuccess = repository.saveNote(indicatorId, values, parameters)
+        if (resultSuccess) {
+            loadNotes(indicatorId)
+        }
+        return resultSuccess
     }
 }

@@ -5,11 +5,14 @@ import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.IndicatorParameter
 import com.healthdiary.model.entities.Note
 import java.util.*
+import kotlin.collections.ArrayList
 
 object LocalDataSource : Repository {
 
-    private val measureTime = IndicatorParameter(1, "measure time",
+    private val measureTime = IndicatorParameter(0, "measure time",
         listOf("before meal", "after meal"))
+
+    private val indicatorParametersList: MutableList<IndicatorParameter> = mutableListOf(measureTime)
 
     private val indicatorList: MutableList<Indicator> = mutableListOf(
         Indicator(1, "Height", "cm", 123),
@@ -61,5 +64,19 @@ object LocalDataSource : Repository {
 
     override fun getIndicatorList(): List<Indicator> {
         return indicatorList
+    }
+
+    override fun saveNote(
+        indicatorId: Int,
+        values: List<Float>,
+        parameters: List<Pair<Int, String>>?
+    ): Boolean {
+        return getIndicatorById(indicatorId)?.let {
+            val params = ArrayList<Pair<IndicatorParameter, String>>()
+            parameters?.forEach { pair ->
+                params.add(Pair(indicatorParametersList[pair.first], pair.second))
+            }
+            notesOfIndicator.add(Note(129, Date(), it, values[0], params))
+        } ?: false
     }
 }
