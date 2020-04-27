@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp">
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_date"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        tools:text="30.03.2020" />
 
     <TextView
         android:id="@+id/indicator_title"
+        style="@style/TitleStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        tools:text="Indicator 4" />
+        android:gravity="center"
+        tools:text="Показатель" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_current_measure"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/design_default_color_background"
+        app:boxBackgroundMode="filled"
+        app:endIconDrawable="@drawable/ic_enter_value"
+        app:endIconMode="custom">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/current_measure"
@@ -29,12 +47,20 @@
         android:id="@+id/parameters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:orientation="vertical" />
 
     <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
         android:id="@+id/chart"
-        android:layout_marginTop="32dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="32dp"
+        android:elevation="3dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp"
+        tools:listitem="@layout/item_note" />
 
 </LinearLayout>

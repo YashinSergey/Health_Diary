@@ -5,14 +5,15 @@ import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.IndicatorParameter
 import com.healthdiary.model.entities.Note
 import java.util.*
+import kotlin.collections.ArrayList
 
 object LocalDataSource : Repository {
 
     private val indicatorParameters: MutableList<IndicatorParameter> = mutableListOf(
-        IndicatorParameter(1, "измерен", listOf("до еды", "после еды")),
-        IndicatorParameter(2, "измерен", listOf("в состоянии покоя", "после физической нагрузки")),
-        IndicatorParameter(3, "измерен", listOf("до еды", "после еды", "вне зависимости от приёма пищи")),
-        IndicatorParameter(4, "прием пищи", listOf("завтрак", "обед", "перекус", "ужин")))
+        IndicatorParameter(0, "измерен", listOf("до еды", "после еды")),
+        IndicatorParameter(1, "измерен", listOf("в состоянии покоя", "после физической нагрузки")),
+        IndicatorParameter(2, "измерен", listOf("до еды", "после еды", "вне зависимости от приёма пищи")),
+        IndicatorParameter(3, "прием пищи", listOf("завтрак", "обед", "перекус", "ужин")))
 
     private val indicatorList: MutableList<Indicator> = mutableListOf(
         Indicator(1, "Рост", "см", 123),
@@ -64,5 +65,19 @@ object LocalDataSource : Repository {
 
     override fun getIndicatorList(): List<Indicator> {
         return indicatorList
+    }
+
+    override fun saveNote(
+        indicatorId: Int,
+        values: List<Float>,
+        parameters: List<Pair<Int, String>>?
+    ): Boolean {
+        return getIndicatorById(indicatorId)?.let {
+            val params = ArrayList<Pair<IndicatorParameter, String>>()
+            parameters?.forEach { pair ->
+                params.add(Pair(indicatorParameters[pair.first], pair.second))
+            }
+            notesOfIndicator.add(Note(129, Date(), it, values[0], params))
+        } ?: false
     }
 }
