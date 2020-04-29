@@ -7,5 +7,5 @@ data class Note(
     val date: Date,
     val indicator: Indicator,
     val value: Float,
-    val parameters: List<Pair<IndicatorParameter, String>>? = null,
+    val parameters: List<IndicatorParameter>? = null,
     val comment: String = "")

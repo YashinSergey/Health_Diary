@@ -21,11 +21,13 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_indicator.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.coroutines.CoroutineContext
 
+@ExperimentalCoroutinesApi
 class IndicatorFragment : Fragment() {
 
 
@@ -78,12 +80,16 @@ class IndicatorFragment : Fragment() {
 
         val spinner = Spinner(context)
         spinner.layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
-        val adapter =
-            context?.let {
+
+        val values : MutableList<String> = mutableListOf()
+        for(parameterValues in indicatorParameter.values){
+            values.add(parameterValues.value)
+        }
+        val adapter  = context?.let {
                 ArrayAdapter<String>(
                     it,
                     android.R.layout.simple_spinner_item,
-                    indicatorParameter.values
+                    values
                 )
             }
         adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

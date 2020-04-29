@@ -9,5 +9,5 @@ import androidx.room.PrimaryKey
 class EntityParameterValues (
     @PrimaryKey(autoGenerate = true) val id : Int? = null,
     @ColumnInfo(name = "parameter_id") val parameterId : Int,
-    val value : String
+    @ColumnInfo(name = "value")val value : String
 )

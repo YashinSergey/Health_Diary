@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "indicators")
 data class EntityIndicator(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
-    val title: String,
-    val unit: String,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name= "id")val id: Int? = null,
+    @ColumnInfo(name= "title")val title: String,
+    @ColumnInfo(name= "unit")val unit: String,
     @ColumnInfo(name = "icon") val icon: Int,
     @ColumnInfo(name = "is_active") val isActive: Boolean
 )

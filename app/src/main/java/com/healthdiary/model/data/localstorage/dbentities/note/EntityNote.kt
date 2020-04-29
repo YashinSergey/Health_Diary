@@ -9,6 +9,6 @@ import java.util.*
 data class EntityNote(
     @PrimaryKey(autoGenerate = true) val id: Int?,
     @ColumnInfo(name = "indicator_id") val indicatorId: Int,
-    val date: Date,
-    val comment: String
+    @ColumnInfo(name = "date")val date: Date,
+    @ColumnInfo(name = "comment")val comment: String
 )
