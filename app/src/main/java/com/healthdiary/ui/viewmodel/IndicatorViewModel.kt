@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
+import com.healthdiary.model.entities.IndicatorParameter
 import com.healthdiary.model.entities.Note
 import com.jjoe64.graphview.series.DataPoint
 import kotlinx.coroutines.CoroutineScope
@@ -18,19 +19,18 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel(), Coro
 
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
-    var indicatorId = 0
+    val indicatorViewState = MutableLiveData<Indicator?>()
+    val chartViewState = MutableLiveData<Array<DataPoint>>()
+    val rvViewState = MutableLiveData<List<Note>>()
 
-    val viewState : ReceiveChannel<Pair<Indicator?, Array<DataPoint>>> = Channel<Pair<Indicator?, Array<DataPoint>>>(Channel.CONFLATED).apply {
-        launch {
-            var chartSeries : Array<DataPoint>
-            val indicator  = repository.getIndicatorById(indicatorId)
-            repository.getNotesByIndicator(indicator).consumeEach {
-                chartSeries = getChartSeries(it)
-                send(Pair(indicator,chartSeries))
-            }
+    fun loadIndicatorInfo(indicatorId: Int?) {
+        indicatorViewState.value = repository.getIndicatorById(indicatorId)
+    }
 
-
-        }
+    fun loadNotes(indicatorId: Int?) {
+        val notes = repository.getNotesByIndicatorId(indicatorId)
+        chartViewState.value = getChartSeries(notes)
+        rvViewState.value = notes
     }
 
     private fun getChartSeries(notes: List<Note>): Array<DataPoint> {
@@ -38,5 +38,13 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel(), Coro
             val currentNote = notes[it]
             DataPoint(currentNote.date, currentNote.value.toDouble())
         }
+    }
+
+    fun saveNote(indicatorId: Int, values: List<Float>, parameters: List<Pair<Int, String>>? = null) : Boolean {
+        val resultSuccess = repository.saveNote(indicatorId, values, parameters)
+        if (resultSuccess) {
+            loadNotes(indicatorId)
+        }
+        return resultSuccess
     }
 }

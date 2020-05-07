@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">#333333</item>
     </style>
 
     <style name="CardViewHome">
@@ -29,6 +30,39 @@
         <item name="fontFamily">Roboto</item>
         <item name="android:letterSpacing">0.22</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TitleStyle" parent="MainTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="RVMainStyle">
+        <item name="fontFamily">Roboto</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="RVHistoryItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="RVHistoryColumn" parent="RVMainStyle">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="RVHistoryColumnTitle" parent="RVHistoryColumn">
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

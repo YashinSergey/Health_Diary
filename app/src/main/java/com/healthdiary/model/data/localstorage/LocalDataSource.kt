@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
@@ -34,6 +35,12 @@ object LocalDataSource : Repository, CoroutineScope {
         ParameterValues(id = 1, value = "before meal"),
         ParameterValues(id = 2, value = "after meal")
     )
+
+    private val indicatorParameters: MutableList<IndicatorParameter> = mutableListOf(
+        IndicatorParameter(0, "измерен", listOf("до еды", "после еды")),
+        IndicatorParameter(1, "измерен", listOf("в состоянии покоя", "после физической нагрузки")),
+        IndicatorParameter(2, "измерен", listOf("до еды", "после еды", "вне зависимости от приёма пищи")),
+        IndicatorParameter(3, "прием пищи", listOf("завтрак", "обед", "перекус", "ужин")))
 
     private val measureTime = IndicatorParameter(
         1, "measure time",
@@ -89,6 +96,10 @@ object LocalDataSource : Repository, CoroutineScope {
         Note(id=20,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[0],value=65f,parameters=listOf(measureTime),comment="ok"),
         Note(id=21,date=GregorianCalendar(2020,2,17).time,indicator=indicatorList[0],value=70f,parameters=listOf(measureTime),comment="ok")
 
+        Note(1, GregorianCalendar(2020, 2, 1).time, indicatorList[1], 60f,  listOf(Pair(indicatorParameters[0], "before meal")),"ok"),
+        Note(2, GregorianCalendar(2020, 2, 2).time, indicatorList[1], 61f, listOf(Pair(indicatorParameters[0], "after meal")),"everything bad, life is sucks"),
+        Note(3, GregorianCalendar(2020, 2, 3).time, indicatorList[1], 60f, listOf(Pair(indicatorParameters[0], "before meal"))),
+        Note(4, GregorianCalendar(2020, 2, 4).time, indicatorList[1], 59f, listOf(Pair(indicatorParameters[0], "before meal")))
     )
 
     //mock для первичного наполнения БД
@@ -176,6 +187,23 @@ object LocalDataSource : Repository, CoroutineScope {
             }
         }
 
+    override fun getIndicatorList(): List<Indicator> {
+        return indicatorList
+    }
+
+    override fun saveNote(
+        indicatorId: Int,
+        values: List<Float>,
+        parameters: List<Pair<Int, String>>?
+    ): Boolean {
+        return getIndicatorById(indicatorId)?.let {
+            val params = ArrayList<Pair<IndicatorParameter, String>>()
+            parameters?.forEach { pair ->
+                params.add(Pair(indicatorParameters[pair.first], pair.second))
+            }
+            notesOfIndicator.add(Note(129, Date(), it, values[0], params))
+        } ?: false
+    }
     override suspend fun getLastValueByIndicatorId(id: Int?): ReceiveChannel<EntityLastValueByIndicatorId?> =
         Channel<EntityLastValueByIndicatorId?>(Channel.CONFLATED).apply {
             val listValue = db.daoModel().getLastValueByIndicatorId(id)

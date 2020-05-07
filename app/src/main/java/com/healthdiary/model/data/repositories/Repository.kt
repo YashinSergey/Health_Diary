@@ -15,4 +15,7 @@ interface Repository {
     suspend fun saveNewNote(note: Note)
 
 
+    fun getNotesByIndicatorId(id: Int?) : List<Note>
+    fun getIndicatorById(id: Int?) : Indicator?
+    fun saveNote(indicatorId: Int, values: List<Float>, parameters: List<Pair<Int, String>>?) : Boolean
 }
