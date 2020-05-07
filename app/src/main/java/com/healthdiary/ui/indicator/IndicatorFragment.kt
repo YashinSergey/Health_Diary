@@ -22,7 +22,6 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_indicator.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -35,6 +34,7 @@ class IndicatorFragment : Fragment() {
     private val model: IndicatorViewModel by viewModel()
     private val fragmentArgs: IndicatorFragmentArgs by navArgs()
     private val parametersMap = HashMap<Int, Spinner>()
+    private lateinit var  currentIndicator : Indicator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,22 +48,6 @@ class IndicatorFragment : Fragment() {
         val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val indicatorId = fragmentArgs.indicatorId
         tv_date.text = dateFormat.format(Date())
-        ti_current_measure.setEndIconOnClickListener {
-            if (current_measure.text.isNullOrEmpty()) {
-                return@setEndIconOnClickListener
-            }
-            val parametersList: MutableList<Pair<Int, String>> = ArrayList<Pair<Int, String>>()
-            parametersMap.forEach {
-                parametersList.add(Pair(it.key, it.value.selectedItem.toString()))
-            }
-            if (model.saveNote(
-                    indicatorId, listOf(current_measure.text.toString().toFloat()),
-                    parametersList
-                )
-            ) {
-                current_measure.text!!.clear()
-            }
-        }
         model.loadIndicatorInfo(indicatorId)
         model.loadNotes(indicatorId)
         model.indicatorViewState.observe(viewLifecycleOwner, Observer {
@@ -72,10 +56,27 @@ class IndicatorFragment : Fragment() {
         model.chartViewState.observe(viewLifecycleOwner, Observer {
             updateChart(it)
         })
+        ti_current_measure.setEndIconOnClickListener {
+            if (current_measure.text.isNullOrEmpty()) {
+                return@setEndIconOnClickListener
+            }
+            val parametersList: MutableList<IndicatorParameter> = ArrayList<IndicatorParameter>()
+            parametersMap.forEach {
+                parametersList.add(IndicatorParameter(id = it.key, title = it.value.selectedItem.toString(), values = null))
+            }
+            if (model.saveNote(
+                    currentIndicator, listOf(current_measure.text.toString().toFloat()),
+                    parametersList
+                )
+            ) {
+                current_measure.text!!.clear()
+            }
+        }
     }
 
     private fun initView(indicator: Indicator?) {
         indicator?.let {
+            currentIndicator = it
             indicator_title.text = indicator.title
             indicator.parameters?.let { parametersList ->
                 if (parametersList.isEmpty()) {

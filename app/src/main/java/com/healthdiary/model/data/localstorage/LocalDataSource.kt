@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
@@ -32,15 +31,24 @@ object LocalDataSource : Repository, CoroutineScope {
     lateinit var db: DataBase
 
     private val parameterValuesList = listOf<ParameterValues>(
-        ParameterValues(id = 1, value = "before meal"),
-        ParameterValues(id = 2, value = "after meal")
+        ParameterValues(id = 1, value = "до еды"),
+        ParameterValues(id = 2,value = "после еды"),
+        ParameterValues(id = 3, value = "в состоянии покоя"),
+        ParameterValues(id = 4,value = "после физической нагрузки"),
+        ParameterValues(id = 5, value = "до еды"),
+        ParameterValues(id = 6, value = "после еды"),
+        ParameterValues(id = 7, value =  "вне зависимости от приёма пищи"),
+        ParameterValues(id = 8, value = "завтрак"),
+        ParameterValues(id = 9, value = "обед"),
+        ParameterValues(id = 10, value = "перекус"),
+        ParameterValues(id = 11, value =  "ужин")
     )
 
     private val indicatorParameters: MutableList<IndicatorParameter> = mutableListOf(
-        IndicatorParameter(0, "измерен", listOf("до еды", "после еды")),
-        IndicatorParameter(1, "измерен", listOf("в состоянии покоя", "после физической нагрузки")),
-        IndicatorParameter(2, "измерен", listOf("до еды", "после еды", "вне зависимости от приёма пищи")),
-        IndicatorParameter(3, "прием пищи", listOf("завтрак", "обед", "перекус", "ужин")))
+        IndicatorParameter(0, "измерен", listOf( parameterValuesList[0], parameterValuesList[1])),
+        IndicatorParameter(1, "измерен", listOf( parameterValuesList[2], parameterValuesList[3])),
+        IndicatorParameter(2, "измерен", listOf( parameterValuesList[4], parameterValuesList[5], parameterValuesList[6])),
+        IndicatorParameter(3, "прием пищи", listOf(parameterValuesList[7], parameterValuesList[8], parameterValuesList[9], parameterValuesList[10], parameterValuesList[11])))
 
     private val measureTime = IndicatorParameter(
         1, "measure time",
@@ -96,10 +104,6 @@ object LocalDataSource : Repository, CoroutineScope {
         Note(id=20,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[0],value=65f,parameters=listOf(measureTime),comment="ok"),
         Note(id=21,date=GregorianCalendar(2020,2,17).time,indicator=indicatorList[0],value=70f,parameters=listOf(measureTime),comment="ok")
 
-        Note(1, GregorianCalendar(2020, 2, 1).time, indicatorList[1], 60f,  listOf(Pair(indicatorParameters[0], "before meal")),"ok"),
-        Note(2, GregorianCalendar(2020, 2, 2).time, indicatorList[1], 61f, listOf(Pair(indicatorParameters[0], "after meal")),"everything bad, life is sucks"),
-        Note(3, GregorianCalendar(2020, 2, 3).time, indicatorList[1], 60f, listOf(Pair(indicatorParameters[0], "before meal"))),
-        Note(4, GregorianCalendar(2020, 2, 4).time, indicatorList[1], 59f, listOf(Pair(indicatorParameters[0], "before meal")))
     )
 
     //mock для первичного наполнения БД
@@ -187,9 +191,6 @@ object LocalDataSource : Repository, CoroutineScope {
             }
         }
 
-    override fun getIndicatorList(): List<Indicator> {
-        return indicatorList
-    }
 
     override fun saveNote(
         indicatorId: Int,
@@ -204,179 +205,4 @@ object LocalDataSource : Repository, CoroutineScope {
             notesOfIndicator.add(Note(129, Date(), it, values[0], params))
         } ?: false
     }
-    override suspend fun getLastValueByIndicatorId(id: Int?): ReceiveChannel<EntityLastValueByIndicatorId?> =
-        Channel<EntityLastValueByIndicatorId?>(Channel.CONFLATED).apply {
-            val listValue = db.daoModel().getLastValueByIndicatorId(id)
-            if (listValue.isEmpty()) {
-                send(null)
-            } else {
-                send(listValue[0])
-            }
-        }
-
-    override suspend fun saveNewNote(note: Note) {
-
-        val idSavingNote =
-            db.daoModel().saveNote(
-                EntityNote(
-                    id = null,
-                    indicatorId = note.indicator.id,
-                    date = Date(),
-                    comment = note.comment
-                )
-            ).toInt()
-        note.parameters?.let {
-            for (parameter in it) {
-                for (value in parameter.values) {
-                    db.daoModel().saveNoteParameters(
-                        EntityNoteParameters(
-                            id = null,
-                            noteId = idSavingNote,
-                            parameterId = parameter.id,
-                            parameterValueId = value.id
-                        )
-                    )
-                }
-            }
-        }
-        val indicatorValuesIdList =
-            db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
-         for(indicatorValuesId in indicatorValuesIdList) {
-             db.daoModel().saveNoteValues(
-                 EntityNoteValues(
-                     id = null,
-                     noteID = idSavingNote,
-                     indicatorValueId = indicatorValuesId,
-                     value = note.value
-                 )
-             )
-         }
-
-    }
-
-    fun initMockDBContent() {
-        launch {
-            Timber.d("Start Coroutine")
-
-            //region AddedIndicators and starting values and param for them
-            val indicators = getStartIndicatorList()
-            for (indicator in indicators) {
-                val modelIndicator = EntityIndicator(
-                    id = null,
-                    title = indicator.title,
-                    unit = indicator.unit,
-                    icon = indicator.icon,
-                    isActive = indicator.isActive
-                )
-                val modelIndicatorValue = EntityIndicatorValues(
-                    id = null,
-                    indicatorId = indicator.id,
-                    title = "Some value for ${indicator.title}"
-                )
-                val modelIndicatorParameters = EntityIndicatorParameters(
-                    id = null,
-                    indicatorId = indicator.id,
-                    title = "Some title"
-                )
-
-                db.daoModel().saveIndicator(modelIndicator)
-                db.daoModel().saveIndicatorValue(modelIndicatorValue)
-                db.daoModel().saveIndicatorParameters(modelIndicatorParameters)
-
-                val listParametersId = db.daoModel().getIndicatorParametersID(indicator.id)
-                for (parameterId in listParametersId) {
-                    val modelParameterValues = EntityParameterValues(
-                        id = null,
-                        parameterId = parameterId,
-                        value = "Some measurement characteristic"
-                    )
-                    db.daoModel().saveParameterValues(modelParameterValues)
-                }
-            }
-            //endregion
-
-            //region Additional values and parameters
-
-            val modelSecondIndicatorValueForPressure = EntityIndicatorValues(
-                id = null,
-                indicatorId = indicators[3].id,
-                title = "Up value"
-
-            )
-            db.daoModel().saveIndicatorValue(modelSecondIndicatorValueForPressure)
-
-            val modelSecondValueForHeight = EntityParameterValues(
-                id = null,
-                parameterId = indicators[0].id,
-                value = "In jump"
-            )
-            val modelSecondValueForWeight = EntityParameterValues(
-                id = null,
-                parameterId = indicators[1].id,
-                value = "Morning"
-            )
-            val modelSecondValueForSleep = EntityParameterValues(
-                id = null,
-                parameterId = indicators[2].id,
-                value = "After gym"
-            )
-            db.daoModel().saveParameterValues(modelSecondValueForHeight)
-            db.daoModel().saveParameterValues(modelSecondValueForWeight)
-            db.daoModel().saveParameterValues(modelSecondValueForSleep)
-            //endregion
-
-            //region Added notes and parameters for them
-            val notes = notesOfIndicator
-            for (note in notes) {
-                val modelNote =
-                    EntityNote(
-                        id = null,
-                        date = note.date,
-                        indicatorId = note.indicator.id,
-                        comment = note.comment
-                    )
-                db.daoModel().saveNote(modelNote)
-
-                val listIndicatorValues =
-                    db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
-                listIndicatorValues.let {
-                    for (indicatorValueId in it) {
-                        val modelNoteValues = EntityNoteValues(
-                            id = null,
-                            noteID = note.id!!,
-                            indicatorValueId = indicatorValueId,
-                            value = Random.nextInt(100).toFloat()
-                        )
-                        db.daoModel().saveNoteValues(modelNoteValues)
-                    }
-                }
-
-                val mockIndicatorParameterId = 1
-                val mockParameterValueId = 1
-                val modelNoteParameters = EntityNoteParameters(
-                    id = null,
-                    noteId = note.id!!,
-                    parameterId = mockIndicatorParameterId,
-                    parameterValueId = mockParameterValueId
-                )
-                db.daoModel().saveNoteParameters(modelNoteParameters)
-            }
-            //endregion
-
-            //region test saving new Notes
-            for(indicator in indicatorList){
-                val day = Random.nextInt(30)
-                val note = Note(id = null, date = GregorianCalendar(2020, 2, day).time, indicator = indicator, value = Random.nextInt(100).toFloat(), parameters = listOf(measureTime), comment = "New note by day ${day}" )
-                saveNewNote(note)
-            }
-            //endregion
-
-
-            Timber.d("Saving mock content done")
-        }
-
-
-    }
-
-
 }

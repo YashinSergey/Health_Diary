@@ -13,6 +13,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class IndicatorViewModel(private val repository: Repository) : ViewModel(), CoroutineScope{
@@ -24,13 +25,17 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel(), Coro
     val rvViewState = MutableLiveData<List<Note>>()
 
     fun loadIndicatorInfo(indicatorId: Int?) {
-        indicatorViewState.value = repository.getIndicatorById(indicatorId)
+        launch {
+            indicatorViewState.value = repository.getIndicatorById(indicatorId)
+        }
     }
 
     fun loadNotes(indicatorId: Int?) {
-        val notes = repository.getNotesByIndicatorId(indicatorId)
-        chartViewState.value = getChartSeries(notes)
-        rvViewState.value = notes
+        launch {
+            val notes = repository.getNotesByIndicatorId(indicatorId)
+            chartViewState.value = getChartSeries(notes)
+            rvViewState.value = notes
+        }
     }
 
     private fun getChartSeries(notes: List<Note>): Array<DataPoint> {
@@ -40,11 +45,21 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel(), Coro
         }
     }
 
-    fun saveNote(indicatorId: Int, values: List<Float>, parameters: List<Pair<Int, String>>? = null) : Boolean {
-        val resultSuccess = repository.saveNote(indicatorId, values, parameters)
-        if (resultSuccess) {
-            loadNotes(indicatorId)
+    fun saveNote(indicator: Indicator, values: List<Float>, parameters: List<IndicatorParameter>? = null) : Boolean {
+        launch {
+            val note = Note(
+                id = null,
+                date = Date(),
+                indicator = indicator,
+                value = values[0],
+                parameters = parameters,
+                comment = ""
+            )
+            val resultSuccess = repository.saveNote(indicator, values, parameters)
+            if (resultSuccess) {
+                loadNotes(indicator.id)
+            }
+            return resultSuccess
         }
-        return resultSuccess
     }
 }
