@@ -19,13 +19,10 @@ import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_indicator.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 class IndicatorFragment : Fragment() {
@@ -121,7 +118,7 @@ class IndicatorFragment : Fragment() {
 
     private fun consumeViewState(indicatorId : Int){
         model.indicatorId = indicatorId
-        CoroutineScope(Dispatchers.IO).launch {
+        model.launch {
             model.viewState.consumeEach {
                 initView(it.first, it.second)
             }
