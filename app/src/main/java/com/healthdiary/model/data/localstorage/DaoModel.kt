@@ -67,7 +67,4 @@ interface DaoModel {
     @Insert()
     fun saveParameterValues(parameterValuesEntry : EntityParameterValues)
 
-
-
-
 }

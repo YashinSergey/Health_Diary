@@ -41,6 +41,7 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
         holder.itemView.setOnClickListener { item?.let { listener(it.id) } }
     }
 
+
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 

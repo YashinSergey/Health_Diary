@@ -22,9 +22,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class HomeFragment : Fragment(), CoroutineScope {
+class HomeFragment : Fragment(){
 
-    override val coroutineContext: CoroutineContext = Dispatchers.IO
 
     private val homeViewModel by viewModel<HomeViewModel>()
 
