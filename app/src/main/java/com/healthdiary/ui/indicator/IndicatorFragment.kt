@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.healthdiary.R
 import com.healthdiary.model.entities.Indicator
 import com.healthdiary.model.entities.IndicatorParameter
+import com.healthdiary.model.entities.ParameterValues
 import com.healthdiary.ui.indicator.adapters.IndicatorRVAdapter
 import com.healthdiary.ui.viewmodel.IndicatorViewModel
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
@@ -62,14 +63,16 @@ class IndicatorFragment : Fragment() {
             }
             val parametersList: MutableList<IndicatorParameter> = ArrayList<IndicatorParameter>()
             parametersMap.forEach {
-                parametersList.add(IndicatorParameter(id = it.key, title = it.value.selectedItem.toString(), values = null))
+                parametersList.add(IndicatorParameter(id = it.key, title = "", values = listOf(ParameterValues(id = null, value = it.value.selectedItem.toString()))))
             }
-            if (model.saveNote(
-                    currentIndicator, listOf(current_measure.text.toString().toFloat()),
-                    parametersList
-                )
-            ) {
-                current_measure.text!!.clear()
+            model.launch {
+                if (model.saveNote(
+                        currentIndicator, listOf(current_measure.text.toString().toFloat()),
+                        parametersList
+                    )
+                ) {
+                    current_measure.text!!.clear()
+                }
             }
         }
     }
@@ -91,7 +94,7 @@ class IndicatorFragment : Fragment() {
         initChart()
     }
 
-    private fun addSpinnerView(indicatorParameter: IndicatorParameter): View {
+    private fun addSpinnerView(indicatorParameter: IndicatorParameter): Spinner {
 
         val matchParent = LinearLayout.LayoutParams.MATCH_PARENT
         val wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -118,7 +121,7 @@ class IndicatorFragment : Fragment() {
                 ArrayAdapter<String>(
                     it,
                     android.R.layout.simple_spinner_item,
-                    indicatorParameter.values
+                    indicatorParameter.values[0].value.toInt()
                 )
             }
         adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -162,14 +165,5 @@ class IndicatorFragment : Fragment() {
     private fun initRecycler(adapter: IndicatorRVAdapter) {
         rv_indicator.layoutManager = LinearLayoutManager(this.context)
         rv_indicator.adapter = adapter
-    }
-
-    private fun consumeViewState(indicatorId : Int){
-        model.indicatorId = indicatorId
-        model.launch {
-            model.viewState.consumeEach {
-                initView(it.first, it.second)
-            }
-        }
     }
 }

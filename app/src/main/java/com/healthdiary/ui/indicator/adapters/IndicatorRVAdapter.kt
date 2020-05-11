@@ -61,7 +61,7 @@ class IndicatorRVAdapter(private val parameters: List<IndicatorParameter>?) :
                     parameters.removeView(it)
                 }
                 note.parameters?.forEach {
-                    val view = createTextView(it.second, R.style.RVHistoryColumn)
+                    val view = createTextView(it.title, R.style.RVHistoryColumn)
                     parameters.addView(view)
                 }
             }

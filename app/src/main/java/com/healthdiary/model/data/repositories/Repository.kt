@@ -12,10 +12,6 @@ interface Repository {
     suspend fun getIndicatorById(id: Int): Indicator?
     suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>>
     suspend fun getLastValueByIndicatorId(id: Int?): ReceiveChannel<EntityLastValueByIndicatorId?>
-    suspend fun saveNewNote(note: Note)
-
-
-    suspend fun getNotesByIndicatorId(id: Int?) : List<Note>
-    suspend fun getIndicatorById(id: Int?) : Indicator?
-    suspend fun saveNote(indicatorId: Indicator, values: List<Float>, parameters: List<Pair<Int, String>>?) : Boolean
+    suspend fun saveNewNote(note: Note) : Int?
+    suspend fun getNotesByIndicatorId(id: Int) : List<Note>
 }

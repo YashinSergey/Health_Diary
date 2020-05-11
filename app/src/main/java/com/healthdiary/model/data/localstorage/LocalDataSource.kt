@@ -22,6 +22,8 @@ import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
 object LocalDataSource : Repository, CoroutineScope {
@@ -30,25 +32,40 @@ object LocalDataSource : Repository, CoroutineScope {
     override val coroutineContext: CoroutineContext by lazy { Dispatchers.IO }
     lateinit var db: DataBase
 
+    //region mock data
     private val parameterValuesList = listOf<ParameterValues>(
         ParameterValues(id = 1, value = "до еды"),
-        ParameterValues(id = 2,value = "после еды"),
+        ParameterValues(id = 2, value = "после еды"),
         ParameterValues(id = 3, value = "в состоянии покоя"),
-        ParameterValues(id = 4,value = "после физической нагрузки"),
+        ParameterValues(id = 4, value = "после физической нагрузки"),
         ParameterValues(id = 5, value = "до еды"),
         ParameterValues(id = 6, value = "после еды"),
-        ParameterValues(id = 7, value =  "вне зависимости от приёма пищи"),
+        ParameterValues(id = 7, value = "вне зависимости от приёма пищи"),
         ParameterValues(id = 8, value = "завтрак"),
         ParameterValues(id = 9, value = "обед"),
         ParameterValues(id = 10, value = "перекус"),
-        ParameterValues(id = 11, value =  "ужин")
+        ParameterValues(id = 11, value = "ужин")
     )
 
     private val indicatorParameters: MutableList<IndicatorParameter> = mutableListOf(
-        IndicatorParameter(0, "измерен", listOf( parameterValuesList[0], parameterValuesList[1])),
-        IndicatorParameter(1, "измерен", listOf( parameterValuesList[2], parameterValuesList[3])),
-        IndicatorParameter(2, "измерен", listOf( parameterValuesList[4], parameterValuesList[5], parameterValuesList[6])),
-        IndicatorParameter(3, "прием пищи", listOf(parameterValuesList[7], parameterValuesList[8], parameterValuesList[9], parameterValuesList[10], parameterValuesList[11])))
+        IndicatorParameter(0, "измерен", listOf(parameterValuesList[0], parameterValuesList[1])),
+        IndicatorParameter(1, "измерен", listOf(parameterValuesList[2], parameterValuesList[3])),
+        IndicatorParameter(
+            2,
+            "измерен",
+            listOf(parameterValuesList[4], parameterValuesList[5], parameterValuesList[6])
+        ),
+        IndicatorParameter(
+            3,
+            "прием пищи",
+            listOf(
+                parameterValuesList[7],
+                parameterValuesList[8],
+                parameterValuesList[9],
+                parameterValuesList[10]
+            )
+        )
+    )
 
     private val measureTime = IndicatorParameter(
         1, "measure time",
@@ -82,39 +99,378 @@ object LocalDataSource : Repository, CoroutineScope {
     )
 
     private val notesOfIndicator: MutableList<Note> = mutableListOf(
-        Note(id=1,date=GregorianCalendar(2020,2,11).time,indicator=indicatorList[1],value=50f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=2,date=GregorianCalendar(2020,2,12).time,indicator=indicatorList[2],value=70f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=3,date=GregorianCalendar(2020,2,13).time,indicator=indicatorList[3],value=80f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=4,date=GregorianCalendar(2020,2,11).time,indicator=indicatorList[4],value=90f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=5,date=GregorianCalendar(2020,2,10).time,indicator=indicatorList[5],value=54f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=6,date=GregorianCalendar(2020,2,13).time,indicator=indicatorList[6],value=45f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=7,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[7],value=58f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=8,date=GregorianCalendar(2020,2,12).time,indicator=indicatorList[8],value=85f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=9,date=GregorianCalendar(2020,2,11).time,indicator=indicatorList[9],value=43f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=10,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[10],value=56f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=11,date=GregorianCalendar(2020,2,17).time,indicator=indicatorList[11],value=75f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=12,date=GregorianCalendar(2020,2,13).time,indicator=indicatorList[12],value=32f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=13,date=GregorianCalendar(2020,2,14).time,indicator=indicatorList[13],value=56f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=14,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[14],value=68f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=15,date=GregorianCalendar(2020,2,16).time,indicator=indicatorList[15],value=93f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=16,date=GregorianCalendar(2020,2,12).time,indicator=indicatorList[1],value=46f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=17,date=GregorianCalendar(2020,2,13).time,indicator=indicatorList[2],value=75f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=18,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[3],value=56f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=19,date=GregorianCalendar(2020,2,16).time,indicator=indicatorList[4],value=59f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=20,date=GregorianCalendar(2020,2,15).time,indicator=indicatorList[0],value=65f,parameters=listOf(measureTime),comment="ok"),
-        Note(id=21,date=GregorianCalendar(2020,2,17).time,indicator=indicatorList[0],value=70f,parameters=listOf(measureTime),comment="ok")
-
+        Note(
+            id = 1,
+            date = GregorianCalendar(2020, 2, 11).time,
+            indicator = indicatorList[1],
+            value = 50f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 2,
+            date = GregorianCalendar(2020, 2, 12).time,
+            indicator = indicatorList[2],
+            value = 70f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 3,
+            date = GregorianCalendar(2020, 2, 13).time,
+            indicator = indicatorList[3],
+            value = 80f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 4,
+            date = GregorianCalendar(2020, 2, 11).time,
+            indicator = indicatorList[4],
+            value = 90f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 5,
+            date = GregorianCalendar(2020, 2, 10).time,
+            indicator = indicatorList[5],
+            value = 54f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 6,
+            date = GregorianCalendar(2020, 2, 13).time,
+            indicator = indicatorList[6],
+            value = 45f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 7,
+            date = GregorianCalendar(2020, 2, 15).time,
+            indicator = indicatorList[7],
+            value = 58f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 8,
+            date = GregorianCalendar(2020, 2, 12).time,
+            indicator = indicatorList[8],
+            value = 85f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 9,
+            date = GregorianCalendar(2020, 2, 11).time,
+            indicator = indicatorList[9],
+            value = 43f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 10,
+            date = GregorianCalendar(2020, 2, 15).time,
+            indicator = indicatorList[10],
+            value = 56f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 11,
+            date = GregorianCalendar(2020, 2, 17).time,
+            indicator = indicatorList[11],
+            value = 75f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 12,
+            date = GregorianCalendar(2020, 2, 13).time,
+            indicator = indicatorList[12],
+            value = 32f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 13,
+            date = GregorianCalendar(2020, 2, 14).time,
+            indicator = indicatorList[13],
+            value = 56f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 14,
+            date = GregorianCalendar(2020, 2, 15).time,
+            indicator = indicatorList[14],
+            value = 68f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 15,
+            date = GregorianCalendar(2020, 2, 16).time,
+            indicator = indicatorList[15],
+            value = 93f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 16,
+            date = GregorianCalendar(2020, 2, 12).time,
+            indicator = indicatorList[1],
+            value = 46f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 17,
+            date = GregorianCalendar(2020, 2, 13).time,
+            indicator = indicatorList[2],
+            value = 75f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 18,
+            date = GregorianCalendar(2020, 2, 15).time,
+            indicator = indicatorList[3],
+            value = 56f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 19,
+            date = GregorianCalendar(2020, 2, 16).time,
+            indicator = indicatorList[4],
+            value = 59f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 20,
+            date = GregorianCalendar(2020, 2, 15).time,
+            indicator = indicatorList[0],
+            value = 65f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        ),
+        Note(
+            id = 21,
+            date = GregorianCalendar(2020, 2, 17).time,
+            indicator = indicatorList[0],
+            value = 70f,
+            parameters = listOf(measureTime),
+            comment = "ok"
+        )
     )
 
-    //mock для первичного наполнения БД
-    fun getStartIndicatorList(): List<Indicator> {
-        return indicatorList
-    }
+    fun initMockDBContent() {
+        launch {
+            Timber.d("Start Coroutine")
 
+            //region AddedIndicators and starting values and param for them
+            val indicators = getStartIndicatorList()
+            for (indicator in indicators) {
+                val modelIndicator = EntityIndicator(
+                    id = null,
+                    title = indicator.title,
+                    unit = indicator.unit,
+                    icon = indicator.icon,
+                    isActive = indicator.isActive
+                )
+                val modelIndicatorValue = EntityIndicatorValues(
+                    id = null,
+                    indicatorId = indicator.id,
+                    title = "Some value for ${indicator.title}"
+                )
+                val modelIndicatorParameters = EntityIndicatorParameters(
+                    id = null,
+                    indicatorId = indicator.id,
+                    title = "Some title"
+                )
+
+                db.daoModel().saveIndicator(modelIndicator)
+                db.daoModel().saveIndicatorValue(modelIndicatorValue)
+                db.daoModel().saveIndicatorParameters(modelIndicatorParameters)
+
+                val listParametersId = db.daoModel().getIndicatorParametersID(indicator.id)
+                for (parameterId in listParametersId) {
+                    val modelParameterValues = EntityParameterValues(
+                        id = null,
+                        parameterId = parameterId,
+                        value = "Some measurement characteristic"
+                    )
+                    db.daoModel().saveParameterValues(modelParameterValues)
+                }
+            }
+            //endregion
+
+            //region Additional values and parameters
+
+            val modelSecondIndicatorValueForPressure = EntityIndicatorValues(
+                id = null,
+                indicatorId = indicators[3].id,
+                title = "Up value"
+
+            )
+            db.daoModel().saveIndicatorValue(modelSecondIndicatorValueForPressure)
+
+            val modelSecondValueForHeight = EntityParameterValues(
+                id = null,
+                parameterId = indicators[0].id,
+                value = "In jump"
+            )
+            val modelSecondValueForWeight = EntityParameterValues(
+                id = null,
+                parameterId = indicators[1].id,
+                value = "Morning"
+            )
+            val modelSecondValueForSleep = EntityParameterValues(
+                id = null,
+                parameterId = indicators[2].id,
+                value = "After gym"
+            )
+            db.daoModel().saveParameterValues(modelSecondValueForHeight)
+            db.daoModel().saveParameterValues(modelSecondValueForWeight)
+            db.daoModel().saveParameterValues(modelSecondValueForSleep)
+            //endregion
+
+            //region Added notes and parameters for them
+            val notes = notesOfIndicator
+            for (note in notes) {
+                val modelNote =
+                    EntityNote(
+                        id = null,
+                        date = note.date,
+                        indicatorId = note.indicator.id,
+                        comment = note.comment
+                    )
+                db.daoModel().saveNote(modelNote)
+
+                val listIndicatorValues =
+                    db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
+                listIndicatorValues.let {
+                    for (indicatorValueId in it) {
+                        val modelNoteValues = EntityNoteValues(
+                            id = null,
+                            noteID = note.id!!,
+                            indicatorValueId = indicatorValueId,
+                            value = Random.nextInt(100).toFloat()
+                        )
+                        db.daoModel().saveNoteValues(modelNoteValues)
+                    }
+                }
+
+                val mockIndicatorParameterId = 1
+                val mockParameterValueId = 1
+                val modelNoteParameters = EntityNoteParameters(
+                    id = null,
+                    noteId = note.id!!,
+                    parameterId = mockIndicatorParameterId,
+                    parameterValueId = mockParameterValueId
+                )
+                db.daoModel().saveNoteParameters(modelNoteParameters)
+            }
+            //endregion
+
+            //region test saving new Notes
+            for (indicator in indicatorList) {
+                val day = Random.nextInt(30)
+                val note = Note(
+                    id = null,
+                    date = GregorianCalendar(2020, 2, day).time,
+                    indicator = indicator,
+                    value = Random.nextInt(100).toFloat(),
+                    parameters = listOf(measureTime),
+                    comment = "New note by day ${day}"
+                )
+                saveNewNote(note)
+            }
+            //endregion
+
+
+            Timber.d("Saving mock content done")
+        }
+
+
+    }
 
     override fun getNotesByDate(date: Date): List<Note> {
         return notesForOneDay
     }
+
+    fun getStartIndicatorList(): List<Indicator> {
+        return indicatorList
+    }
+    //endregion
+
+    override suspend fun saveNewNote(note: Note): Int? = suspendCoroutine {
+        val idSavingNote =
+            db.daoModel().saveNote(
+                EntityNote(
+                    id = null,
+                    indicatorId = note.indicator.id,
+                    date = Date(),
+                    comment = note.comment
+                )
+            ).toInt()
+        note.parameters?.let {
+            for (parameter in it) {
+                for (value in parameter.values) {
+                    db.daoModel().saveNoteParameters(
+                        EntityNoteParameters(
+                            id = null,
+                            noteId = idSavingNote,
+                            parameterId = parameter.id,
+                            parameterValueId = value.id
+                        )
+                    )
+                }
+            }
+        }
+        val indicatorValuesIdList =
+            db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
+        for (indicatorValuesId in indicatorValuesIdList) {
+            db.daoModel().saveNoteValues(
+                EntityNoteValues(
+                    id = null,
+                    noteID = idSavingNote,
+                    indicatorValueId = indicatorValuesId,
+                    value = note.value
+                )
+            )
+        }
+        it.resume(idSavingNote)
+
+    }
+
+    override suspend fun getIndicatorById(id: Int): Indicator? {
+        val entityIndicator = db.daoModel().getIndicatorById(id)
+        entityIndicator.let {
+            return Indicator(
+                id = entityIndicator.id!!,
+                title = entityIndicator.title,
+                unit = entityIndicator.unit,
+                icon = entityIndicator.icon,
+                isActive = entityIndicator.isActive
+            )
+        }
+    }
+
+    override suspend fun getLastValueByIndicatorId(id: Int?): ReceiveChannel<EntityLastValueByIndicatorId?> =
+        Channel<EntityLastValueByIndicatorId?>(Channel.CONFLATED).apply {
+            val listValue = db.daoModel().getLastValueByIndicatorId(id)
+            if (listValue.isEmpty()) {
+                send(null)
+            } else {
+                send(listValue[0])
+            }
+        }
 
     override suspend fun getNotesByIndicator(indicator: Indicator?): ReceiveChannel<List<Note>> =
         Channel<List<Note>>(Channel.CONFLATED).apply {
@@ -133,23 +489,23 @@ object LocalDataSource : Repository, CoroutineScope {
             send(listNotes)
         }
 
-
-    override suspend fun getIndicatorById(id: Int): Indicator? {
-        Timber.d("incoming ID is $id")
-        val entityIndicator = db.daoModel().getIndicatorById(id)
-        Timber.d("getting db query indicator ID is ${entityIndicator.id}")
-
-        entityIndicator.let {
-            return Indicator(
-                id = entityIndicator.id!!,
-                title = entityIndicator.title,
-                unit = entityIndicator.unit,
-                icon = entityIndicator.icon,
-                isActive = entityIndicator.isActive
-            )
+    override suspend fun getNotesByIndicatorId(indicatorId: Int): List<Note> = suspendCoroutine { continuation ->
+        launch {
+            val listEntityNotes = db.daoModel().getNotesByIndicatorId(indicatorId)
+            val listNotes = ArrayList<Note>()
+            for (entity in listEntityNotes) {
+                listNotes.add(
+                    Note(
+                        id = entity.id,
+                        date = entity.date,
+                        indicator = getIndicatorById(indicatorId)!!,
+                        value = entity.value
+                    )
+                )
+            }
+            continuation.resume(listNotes)
         }
     }
-
 
     override suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>> =
         Channel<List<Indicator>>(Channel.CONFLATED).apply {
@@ -167,13 +523,14 @@ object LocalDataSource : Repository, CoroutineScope {
                 val listIndicatorParameters = ArrayList<IndicatorParameter>()
                 val listParametersid = db.daoModel().getIndicatorParametersID(indicator.id)
                 for (parametersId in listParametersid) {
-                    val listValue = ArrayList<ParameterValues>().apply{
-                        for(entry in db.daoModel().getParameterValuesByParametersId(parametersId)){
+                    val listValue = ArrayList<ParameterValues>().apply {
+                        for (entry in db.daoModel()
+                            .getParameterValuesByParametersId(parametersId)) {
                             add(
                                 ParameterValues(
                                     id = entry.id,
                                     value = entry.value
-                            )
+                                )
                             )
                         }
                     }
@@ -191,18 +548,4 @@ object LocalDataSource : Repository, CoroutineScope {
             }
         }
 
-
-    override fun saveNote(
-        indicatorId: Int,
-        values: List<Float>,
-        parameters: List<Pair<Int, String>>?
-    ): Boolean {
-        return getIndicatorById(indicatorId)?.let {
-            val params = ArrayList<Pair<IndicatorParameter, String>>()
-            parameters?.forEach { pair ->
-                params.add(Pair(indicatorParameters[pair.first], pair.second))
-            }
-            notesOfIndicator.add(Note(129, Date(), it, values[0], params))
-        } ?: false
-    }
 }
