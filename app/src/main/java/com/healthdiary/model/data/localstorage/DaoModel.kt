@@ -31,7 +31,7 @@ interface DaoModel {
     @Query("SELECT id FROM indicator_parameters WHERE indicator_id == :indicatorId")
     fun getIndicatorParametersID(indicatorId : Int) : List<Int>
 
-    @Query("SELECT id FROM indicator_values WHERE indicator_id == :indicatorId")
+    @Query("SELECT id FROM indicator_values WHERE parameter_id == :indicatorId")
     fun getIdIndicatorValuesByIndicatorId(indicatorId : Int) : List<Int>
 
     @Query("SELECT * FROM parameter_values WHERE parameter_id == :parameterId")
@@ -53,7 +53,7 @@ interface DaoModel {
     fun saveNoteValues(noteValuesEntry : EntityNoteValues)
 
     @Insert()
-    fun saveNoteParameters(noteParameters: EntityNoteParameters)
+    fun saveNoteParameters(noteParameters: EntityNoteParameters) : Long
 
     @Insert()
     fun saveIndicator(indicatorEntry : EntityIndicator)
@@ -62,7 +62,7 @@ interface DaoModel {
     fun saveIndicatorValue(indicatorValueEntry : EntityIndicatorValues)
 
     @Insert()
-    fun saveIndicatorParameters(indicatorParameterEntry : EntityIndicatorParameters)
+    fun saveIndicatorParameters(indicatorParameterEntry : EntityIndicatorParameters) : Long
 
     @Insert()
     fun saveParameterValues(parameterValuesEntry : EntityParameterValues)

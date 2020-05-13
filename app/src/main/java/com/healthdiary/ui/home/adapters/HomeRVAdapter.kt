@@ -11,18 +11,22 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_home_rv.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) :
     RecyclerView.Adapter<HomeRVAdapter.ViewHolder>(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
-    companion object {
-        var itemsList: List<Indicator>? = ArrayList()
-    }
+    var itemsList: List<Indicator>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
@@ -42,12 +46,13 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
     }
 
 
+    @ExperimentalCoroutinesApi
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(entity: Indicator?) {
             tv_indicator_title.text = entity?.title
-            when(entity?.icon){
+            when (entity?.icon) {
                 100 -> icon.setImageResource(R.drawable.ic_bathroom_scales)
                 101 -> icon.setImageResource(R.drawable.ic_hospital_bed)
                 102 -> icon.setImageResource(R.drawable.ic_health_thermometer)
@@ -57,7 +62,7 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
             icon.drawable
             launch {
                 repository.getLastValueByIndicatorId(entity?.id).consumeEach { entity ->
-                    tv_indicators_value.text = "${entity?.let { it.value } ?: 0}"
+                    tv_indicators_value.text = "${entity?.value ?: 0}"
                 }
             }
         }

@@ -29,72 +29,55 @@ import kotlin.random.Random
 object LocalDataSource : Repository, CoroutineScope {
 
 
-    override val coroutineContext: CoroutineContext by lazy { Dispatchers.IO }
+    override val coroutineContext: CoroutineContext = Dispatchers.IO
     lateinit var db: DataBase
 
     //region mock data
     private val parameterValuesList = listOf<ParameterValues>(
-        ParameterValues(id = 1, value = "до еды"),
-        ParameterValues(id = 2, value = "после еды"),
-        ParameterValues(id = 3, value = "в состоянии покоя"),
-        ParameterValues(id = 4, value = "после физической нагрузки"),
-        ParameterValues(id = 5, value = "до еды"),
-        ParameterValues(id = 6, value = "после еды"),
-        ParameterValues(id = 7, value = "вне зависимости от приёма пищи"),
-        ParameterValues(id = 8, value = "завтрак"),
-        ParameterValues(id = 9, value = "обед"),
-        ParameterValues(id = 10, value = "перекус"),
-        ParameterValues(id = 11, value = "ужин")
+        ParameterValues(id = null, value = "до еды"),
+        ParameterValues(id = null, value = "после еды"),
+        ParameterValues(id = null, value = "в состоянии покоя"),
+        ParameterValues(id = null, value = "после физической нагрузки"),
+        ParameterValues(id = null, value = "до еды"),
+        ParameterValues(id = null, value = "после еды"),
+        ParameterValues(id = null, value = "вне зависимости от приёма пищи"),
+        ParameterValues(id = null, value = "завтрак"),
+        ParameterValues(id = null, value = "обед"),
+        ParameterValues(id = null, value = "перекус"),
+        ParameterValues(id = null, value = "ужин")
     )
 
     private val indicatorParameters: MutableList<IndicatorParameter> = mutableListOf(
-        IndicatorParameter(0, "измерен", listOf(parameterValuesList[0], parameterValuesList[1])),
-        IndicatorParameter(1, "измерен", listOf(parameterValuesList[2], parameterValuesList[3])),
-        IndicatorParameter(
-            2,
-            "измерен",
-            listOf(parameterValuesList[4], parameterValuesList[5], parameterValuesList[6])
-        ),
-        IndicatorParameter(
-            3,
-            "прием пищи",
-            listOf(
-                parameterValuesList[7],
-                parameterValuesList[8],
-                parameterValuesList[9],
-                parameterValuesList[10]
-            )
+        IndicatorParameter(null,"измерен",listOf(parameterValuesList[0],parameterValuesList[1])),
+        IndicatorParameter(null,"измерен",listOf(parameterValuesList[2],parameterValuesList[3])),
+        IndicatorParameter(null,"измерен",listOf(parameterValuesList[4],parameterValuesList[5],parameterValuesList[6])),
+        IndicatorParameter(null,"прием пищи",listOf(parameterValuesList[7],parameterValuesList[8],parameterValuesList[9],parameterValuesList[10])
         )
-    )
-
-    private val measureTime = IndicatorParameter(
-        1, "measure time",
-        parameterValuesList
     )
 
 
     private val indicatorList: MutableList<Indicator> = mutableListOf(
-        Indicator(1, "Height", "cm", 199),
-        Indicator(2, "Weight", "kg", 100, listOf(measureTime)),
-        Indicator(3, "Sleep", "h", 101),
-        Indicator(4, "Pressure", "custom", 102),
-        Indicator(5, "Indicator 17", "custom", 123),
-        Indicator(6, "Indicator 6", "custom", 123),
-        Indicator(7, "Indicator 7", "custom", 123),
-        Indicator(8, "Indicator 8", "custom", 123),
-        Indicator(9, "Indicator 9", "custom", 123),
-        Indicator(10, "Indicator 10", "custom", 123),
-        Indicator(11, "Indicator 11", "custom", 123),
-        Indicator(12, "Indicator 12", "custom", 123),
-        Indicator(13, "Indicator 13", "custom", 123),
-        Indicator(14, "Indicator 14", "custom", 123),
-        Indicator(15, "Indicator 15", "custom", 123),
-        Indicator(16, "Indicator 16", "custom", 123)
+        Indicator(1, "Height", "cm", 199, indicatorParameters),
+        Indicator(2, "Weight", "kg", 100, indicatorParameters),
+        Indicator(3, "Sleep", "h", 101, indicatorParameters),
+        Indicator(4, "Pressure", "custom", 102, indicatorParameters),
+        Indicator(5, "Indicator 17", "custom", 123, indicatorParameters),
+        Indicator(6, "Indicator 6", "custom", 123, indicatorParameters),
+        Indicator(7, "Indicator 7", "custom", 123, indicatorParameters),
+        Indicator(8, "Indicator 8", "custom", 123, indicatorParameters),
+        Indicator(9, "Indicator 9", "custom", 123, indicatorParameters),
+        Indicator(10, "Indicator 10", "custom", 123, indicatorParameters),
+        Indicator(11, "Indicator 11", "custom", 123, indicatorParameters),
+        Indicator(12, "Indicator 12", "custom", 123, indicatorParameters),
+        Indicator(13, "Indicator 13", "custom", 123, indicatorParameters),
+        Indicator(14, "Indicator 14", "custom", 123, indicatorParameters),
+        Indicator(15, "Indicator 15", "custom", 123, indicatorParameters),
+        Indicator(16, "Indicator 16", "custom", 123, indicatorParameters)
     )
 
     private val notesForOneDay: MutableList<Note> = mutableListOf(
         Note(7, Date(), indicatorList[0], 68f, null, "custom"),
-        Note(8, Date(), indicatorList[1], 70f, listOf(measureTime), "custom"),
+        Note(8, Date(), indicatorList[1], 70f, indicatorParameters, "custom"),
         Note(9, Date(), indicatorList[2], 69f, null, "custom")
     )
 
@@ -104,7 +87,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 11).time,
             indicator = indicatorList[1],
             value = 50f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -112,7 +95,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 12).time,
             indicator = indicatorList[2],
             value = 70f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -120,7 +103,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 13).time,
             indicator = indicatorList[3],
             value = 80f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -128,7 +111,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 11).time,
             indicator = indicatorList[4],
             value = 90f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -136,7 +119,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 10).time,
             indicator = indicatorList[5],
             value = 54f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -144,7 +127,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 13).time,
             indicator = indicatorList[6],
             value = 45f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -152,7 +135,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 15).time,
             indicator = indicatorList[7],
             value = 58f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -160,7 +143,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 12).time,
             indicator = indicatorList[8],
             value = 85f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -168,7 +151,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 11).time,
             indicator = indicatorList[9],
             value = 43f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -176,7 +159,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 15).time,
             indicator = indicatorList[10],
             value = 56f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -184,7 +167,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 17).time,
             indicator = indicatorList[11],
             value = 75f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -192,7 +175,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 13).time,
             indicator = indicatorList[12],
             value = 32f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -200,7 +183,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 14).time,
             indicator = indicatorList[13],
             value = 56f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -208,7 +191,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 15).time,
             indicator = indicatorList[14],
             value = 68f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -216,7 +199,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 16).time,
             indicator = indicatorList[15],
             value = 93f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -224,7 +207,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 12).time,
             indicator = indicatorList[1],
             value = 46f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -232,7 +215,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 13).time,
             indicator = indicatorList[2],
             value = 75f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -240,7 +223,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 15).time,
             indicator = indicatorList[3],
             value = 56f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -248,7 +231,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 16).time,
             indicator = indicatorList[4],
             value = 59f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -256,7 +239,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 15).time,
             indicator = indicatorList[0],
             value = 65f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         ),
         Note(
@@ -264,7 +247,7 @@ object LocalDataSource : Repository, CoroutineScope {
             date = GregorianCalendar(2020, 2, 17).time,
             indicator = indicatorList[0],
             value = 70f,
-            parameters = listOf(measureTime),
+            parameters = indicatorParameters,
             comment = "ok"
         )
     )
@@ -283,30 +266,26 @@ object LocalDataSource : Repository, CoroutineScope {
                     icon = indicator.icon,
                     isActive = indicator.isActive
                 )
-                val modelIndicatorValue = EntityIndicatorValues(
-                    id = null,
-                    indicatorId = indicator.id,
-                    title = "Some value for ${indicator.title}"
-                )
-                val modelIndicatorParameters = EntityIndicatorParameters(
-                    id = null,
-                    indicatorId = indicator.id,
-                    title = "Some title"
-                )
 
-                db.daoModel().saveIndicator(modelIndicator)
-                db.daoModel().saveIndicatorValue(modelIndicatorValue)
-                db.daoModel().saveIndicatorParameters(modelIndicatorParameters)
-
-                val listParametersId = db.daoModel().getIndicatorParametersID(indicator.id)
-                for (parameterId in listParametersId) {
-                    val modelParameterValues = EntityParameterValues(
+                for(indParam in indicator.parameters!!){
+                    val modelIndicatorParameters = EntityIndicatorParameters(
                         id = null,
-                        parameterId = parameterId,
-                        value = "Some measurement characteristic"
+                        indicatorId = indicator.id,
+                        title = indParam.title
                     )
-                    db.daoModel().saveParameterValues(modelParameterValues)
+                    val paramId = db.daoModel().saveIndicatorParameters(modelIndicatorParameters).toInt()
+                    for(paramValues in indParam.values){
+                        val modelIndicatorValue = EntityIndicatorValues(
+                            id = null,
+                            parameterId = paramId,
+                            title = paramValues.value
+                        )
+                        db.daoModel().saveIndicatorValue(modelIndicatorValue)
+                    }
+
                 }
+                db.daoModel().saveIndicator(modelIndicator)
+
             }
             //endregion
 
@@ -314,7 +293,7 @@ object LocalDataSource : Repository, CoroutineScope {
 
             val modelSecondIndicatorValueForPressure = EntityIndicatorValues(
                 id = null,
-                indicatorId = indicators[3].id,
+                parameterId = indicators[3].id,
                 title = "Up value"
 
             )
@@ -376,26 +355,9 @@ object LocalDataSource : Repository, CoroutineScope {
                 )
                 db.daoModel().saveNoteParameters(modelNoteParameters)
             }
-            //endregion
-
-            //region test saving new Notes
-            for (indicator in indicatorList) {
-                val day = Random.nextInt(30)
-                val note = Note(
-                    id = null,
-                    date = GregorianCalendar(2020, 2, day).time,
-                    indicator = indicator,
-                    value = Random.nextInt(100).toFloat(),
-                    parameters = listOf(measureTime),
-                    comment = "New note by day ${day}"
-                )
-                saveNewNote(note)
-            }
-            //endregion
-
-
             Timber.d("Saving mock content done")
         }
+        //endregion
 
 
     }
@@ -426,7 +388,7 @@ object LocalDataSource : Repository, CoroutineScope {
                         EntityNoteParameters(
                             id = null,
                             noteId = idSavingNote,
-                            parameterId = parameter.id,
+                            parameterId = parameter.id!!,
                             parameterValueId = value.id
                         )
                     )

@@ -85,8 +85,8 @@ class IndicatorFragment : Fragment() {
                 if (parametersList.isEmpty()) {
                     return
                 }
-                parametersList.forEach {
-                    parametersMap[it.id] = addSpinnerView(it)
+                parametersList.forEach {param ->
+                    param.id.let { parametersMap[id] = addSpinnerView(param) }
                 }
             }
             initAdapter(indicator.parameters)

@@ -4,11 +4,13 @@ import android.app.Application
 import com.healthdiary.di.*
 import com.healthdiary.model.data.localstorage.DataBase
 import com.healthdiary.model.data.localstorage.LocalDataSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 class App : Application() {
     var db: DataBase? = null
 

@@ -14,23 +14,20 @@ import com.healthdiary.R
 import com.healthdiary.ui.home.adapters.HomeRVAdapter
 import com.healthdiary.ui.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeFragment : Fragment(){
-
+@ExperimentalCoroutinesApi
+class HomeFragment : Fragment() {
 
     private val homeViewModel by viewModel<HomeViewModel>()
 
-    private val RV: RecyclerView by lazy { rv_home }
     val adapter: HomeRVAdapter by lazy {
-        val navController = view?.findNavController()
-        HomeRVAdapter(get()) {
-            val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
-            navController?.navigate(action)
-        }
+        initAdapter()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -41,23 +38,34 @@ class HomeFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        homeViewModel.setViewState()
         initRecycler()
         tv_date.text = dateFormat.format(Date())
     }
 
+    fun initAdapter(): HomeRVAdapter {
+        Timber.d("initAdapter")
+        val navController = view?.findNavController()
+        val adapter =  HomeRVAdapter(get()) {
+            val action = NavGraphDirections.actionGlobalIndicatorFragment(it)
+            navController?.navigate(action)
+        }
+        homeViewModel.viewState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            adapter.itemsList = it
+        })
+        return adapter
+    }
+
 
     private fun initRecycler() {
-        homeViewModel.viewState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            HomeRVAdapter.itemsList = it
-        })
-        RV.layoutManager = LinearLayoutManager(this.context)
-        RV.adapter = adapter
-
+        Timber.d("initRV")
+        Timber.d("Adapter count is ${adapter.itemCount}")
+        rv_home.layoutManager = LinearLayoutManager(this.context)
+        rv_home.adapter = adapter
     }
 }
