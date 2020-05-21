@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "indicator_values")
 class EntityIndicatorValues (
     @PrimaryKey(autoGenerate = true) val id : Int? = null,
-    @ColumnInfo(name = "parameter_id") val parameterId : Int,
+    @ColumnInfo(name = "indicator_id") val indicatorId : Int,
     @ColumnInfo(name = "title")val title : String? = ""
     )

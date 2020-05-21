@@ -48,10 +48,22 @@ object LocalDataSource : Repository, CoroutineScope {
     )
 
     private val indicatorParameters: MutableList<IndicatorParameter> = mutableListOf(
-        IndicatorParameter(null,"измерен",listOf(parameterValuesList[0],parameterValuesList[1])),
-        IndicatorParameter(null,"измерен",listOf(parameterValuesList[2],parameterValuesList[3])),
-        IndicatorParameter(null,"измерен",listOf(parameterValuesList[4],parameterValuesList[5],parameterValuesList[6])),
-        IndicatorParameter(null,"прием пищи",listOf(parameterValuesList[7],parameterValuesList[8],parameterValuesList[9],parameterValuesList[10])
+        IndicatorParameter(null, "измерен", listOf(parameterValuesList[0], parameterValuesList[1])),
+        IndicatorParameter(null, "измерен", listOf(parameterValuesList[2], parameterValuesList[3])),
+        IndicatorParameter(
+            null,
+            "измерен",
+            listOf(parameterValuesList[4], parameterValuesList[5], parameterValuesList[6])
+        ),
+        IndicatorParameter(
+            null,
+            "прием пищи",
+            listOf(
+                parameterValuesList[7],
+                parameterValuesList[8],
+                parameterValuesList[9],
+                parameterValuesList[10]
+            )
         )
     )
 
@@ -267,23 +279,31 @@ object LocalDataSource : Repository, CoroutineScope {
                     isActive = indicator.isActive
                 )
 
-                for(indParam in indicator.parameters!!){
+                val modelIndicatorValues = EntityIndicatorValues(
+                    id = null,
+                    indicatorId = indicator.id,
+                    title = "1st value"
+                )
+
+                for (indParam in indicator.parameters!!) {
                     val modelIndicatorParameters = EntityIndicatorParameters(
                         id = null,
                         indicatorId = indicator.id,
                         title = indParam.title
                     )
-                    val paramId = db.daoModel().saveIndicatorParameters(modelIndicatorParameters).toInt()
-                    for(paramValues in indParam.values){
-                        val modelIndicatorValue = EntityIndicatorValues(
+                    val paramId =
+                        db.daoModel().saveIndicatorParameters(modelIndicatorParameters).toInt()
+                    for (paramValues in indParam.values) {
+                        val modelIndicatorValue = EntityParameterValues(
                             id = null,
                             parameterId = paramId,
-                            title = paramValues.value
+                            value = paramValues.value
                         )
-                        db.daoModel().saveIndicatorValue(modelIndicatorValue)
+                        db.daoModel().saveParameterValues(modelIndicatorValue)
                     }
 
                 }
+                db.daoModel().saveIndicatorValue(modelIndicatorValues)
                 db.daoModel().saveIndicator(modelIndicator)
 
             }
@@ -293,7 +313,7 @@ object LocalDataSource : Repository, CoroutineScope {
 
             val modelSecondIndicatorValueForPressure = EntityIndicatorValues(
                 id = null,
-                parameterId = indicators[3].id,
+                indicatorId = indicators[3].id,
                 title = "Up value"
 
             )
@@ -331,9 +351,9 @@ object LocalDataSource : Repository, CoroutineScope {
                     )
                 db.daoModel().saveNote(modelNote)
 
-                val listIndicatorValues =
-                    db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
-                listIndicatorValues.let {
+                val listIndicatorValuesId =
+                    db.daoModel().getIdIndicatorValuesIdByIndicatorId(note.indicator.id)
+                listIndicatorValuesId.let {
                     for (indicatorValueId in it) {
                         val modelNoteValues = EntityNoteValues(
                             id = null,
@@ -396,7 +416,7 @@ object LocalDataSource : Repository, CoroutineScope {
             }
         }
         val indicatorValuesIdList =
-            db.daoModel().getIdIndicatorValuesByIndicatorId(note.indicator.id)
+            db.daoModel().getIdIndicatorValuesIdByIndicatorId(note.indicator.id)
         for (indicatorValuesId in indicatorValuesIdList) {
             db.daoModel().saveNoteValues(
                 EntityNoteValues(
@@ -451,23 +471,25 @@ object LocalDataSource : Repository, CoroutineScope {
             send(listNotes)
         }
 
-    override suspend fun getNotesByIndicatorId(indicatorId: Int): List<Note> = suspendCoroutine { continuation ->
-        launch {
-            val listEntityNotes = db.daoModel().getNotesByIndicatorId(indicatorId)
-            val listNotes = ArrayList<Note>()
-            for (entity in listEntityNotes) {
-                listNotes.add(
-                    Note(
-                        id = entity.id,
-                        date = entity.date,
-                        indicator = getIndicatorById(indicatorId)!!,
-                        value = entity.value
+    override suspend fun getNotesByIndicatorId(id: Int): List<Note> =
+        suspendCoroutine { continuation ->
+            launch {
+                val listEntityNotes = db.daoModel().getNotesByIndicatorId(id)
+                val listNotes = ArrayList<Note>()
+                for (entity in listEntityNotes) {
+                    listNotes.add(
+                        Note(
+                            id = entity.id,
+                            date = entity.date,
+                            indicator = getIndicatorById(id)!!,
+                            value = entity.value
+                        )
                     )
-                )
+                }
+                continuation.resume(listNotes)
             }
-            continuation.resume(listNotes)
         }
-    }
+
 
     override suspend fun getIndicatorList(): ReceiveChannel<List<Indicator>> =
         Channel<List<Indicator>>(Channel.CONFLATED).apply {

@@ -67,6 +67,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation "androidx.room:room-ktx:2.2.5"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
     def nav_version = "2.3.0-alpha05"
