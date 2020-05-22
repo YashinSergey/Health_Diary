@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -61,8 +62,8 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
             }
             icon.drawable
             launch {
-                repository.getLastValueByIndicatorId(entity?.id).consumeEach { entity ->
-                    tv_indicators_value.text = "${entity?.value ?: 0}"
+                repository.getLastValueByIndicatorId(entity?.id).collect {
+                    tv_indicators_value.text = "${it?.value ?: 0}"
                 }
             }
         }

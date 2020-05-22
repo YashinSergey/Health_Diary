@@ -2,13 +2,11 @@ package com.healthdiary.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.healthdiary.model.data.localstorage.LocalDataSource
 import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
@@ -20,16 +18,13 @@ class HomeViewModel(private val repository: Repository) : ViewModel(), Coroutine
 
     val viewState: MutableLiveData<List<Indicator>> = MutableLiveData<List<Indicator>>()
 
-//    init {
-//        setViewState()
-//    }
-
-    fun setViewState(){
+    fun setViewState() {
+        Timber.d("Start coroutine")
         launch {
-            repository.getIndicatorList().consumeEach {
-                viewState.postValue(it)
-                Timber.d("Coroutine ${it.size}")
-            }
+            Timber.d("Coroutine has started")
+            val list = repository.getIndicatorList()
+            viewState.postValue(list)
+            Timber.d("Coroutine ${list.size}")
         }
     }
 

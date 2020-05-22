@@ -8,6 +8,7 @@ import com.healthdiary.model.entities.IndicatorParameter
 import com.healthdiary.model.entities.Note
 import com.jjoe64.graphview.series.DataPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -22,36 +23,21 @@ class IndicatorViewModel(private val repository: Repository) : ViewModel(), Coro
     val rvViewState = MutableLiveData<List<Note>>()
 
     fun loadIndicatorInfo(indicatorId: Int) {
-
-        val request = async {
-            return@async repository.getIndicatorById(indicatorId)
-        }
-        launch(Dispatchers.Main) {
-            indicatorViewState.value = request.await()
+        Timber.d("Start coroutine loadIndicatorInfo")
+        launch {
+            val indicator = repository.getIndicatorById(indicatorId)
+            indicatorViewState.postValue(indicator)
+            Timber.d("Over coroutine loadIndicatorInfo")
         }
     }
 
     fun loadNotes(indicatorId: Int) {
         Timber.d("Start coroutine load notes")
-        val fillingContent: Deferred<List<Note>> = async {
-            lateinit var result: List<Note>
-            Timber.d("Start async load notes")
-            val request = async {
-                result = repository.getNotesByIndicatorId(indicatorId)
-                Timber.d("Over async.IO load notes")
-            }
-            request.await()
-            Timber.d("Loaded notes size is ${result.size}")
-            result
-        }
-        launch(Dispatchers.Main) {
-            Timber.d("Pre await")
-            val notes = fillingContent.await()
-            Timber.d("Notes size is ${notes.size}")
-            rvViewState.value = notes
-            chartViewState.value = getChartSeries(notes)
-            Timber.d("Over getChartSeries ${chartViewState.value!!.size}")
-            Timber.d("End fun LOADNOTES")
+        launch(Dispatchers.Default) {
+            val notes: List<Note> = repository.getNotesByIndicatorId(indicatorId).first()
+            rvViewState.postValue(notes)
+            chartViewState.postValue(getChartSeries(notes))
+            Timber.d("Over coroutine loadNotes and postValue")
         }
     }
 

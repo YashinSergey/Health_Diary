@@ -32,7 +32,7 @@ import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 class IndicatorFragment : Fragment(), CoroutineScope {
-    override val coroutineContext: CoroutineContext = Dispatchers.IO
+    override val coroutineContext: CoroutineContext = Dispatchers.Default
 
     private val model: IndicatorViewModel by viewModel()
     private val fragmentArgs: IndicatorFragmentArgs by navArgs()
@@ -98,7 +98,7 @@ class IndicatorFragment : Fragment(), CoroutineScope {
             }
             initAdapter(indicator.parameters)
         }
-        initChart()
+//        initChart()
         Timber.d("Over initView")
     }
 
