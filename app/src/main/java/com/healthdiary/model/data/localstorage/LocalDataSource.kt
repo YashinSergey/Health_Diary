@@ -286,16 +286,16 @@ object LocalDataSource : Repository, CoroutineScope {
                     title = "1st value"
                 )
 
-                for (indParam in indicator.parameters!!) {
+                for (indParameter in indicator.parameters!!) {
                     val modelIndicatorParameters = EntityIndicatorParameters(
                         id = null,
                         indicatorId = indicator.id,
-                        title = indParam.title
+                        title = indParameter.title
                     )
                     val paramId =
                         db.daoModel().saveIndicatorParameters(modelIndicatorParameters)
                             .toInt()
-                    for (paramValues in indParam.values) {
+                    for (paramValues in indParameter.values) {
                         val modelIndicatorValue = EntityParameterValues(
                             id = null,
                             parameterId = paramId,
@@ -438,12 +438,31 @@ object LocalDataSource : Repository, CoroutineScope {
 
     override suspend fun getIndicatorById(id: Int): Indicator? {
         val entityIndicator = db.daoModel().getIndicatorById(id).first()
+        val parameters = mutableListOf<IndicatorParameter>()
+        db.daoModel().getIndicatorParametersByIndicatorId(entityIndicator.id).first().forEach{
+            val values = mutableListOf<ParameterValues>()
+            db.daoModel().getParameterValuesByParametersId(it.id).first().forEach{
+                values.add(
+                    ParameterValues(
+                    id = it.id,
+                    value = it.value
+                ))
+            }
+
+            parameters.add(
+                IndicatorParameter(
+                    id=it.id,
+                    title = it.title,
+                    values = values
+                ))
+        }
         return Indicator(
             id = entityIndicator.id!!,
             title = entityIndicator.title,
             unit = entityIndicator.unit,
             icon = entityIndicator.icon,
-            isActive = entityIndicator.isActive
+            isActive = entityIndicator.isActive,
+            parameters = parameters
         )
     }
 

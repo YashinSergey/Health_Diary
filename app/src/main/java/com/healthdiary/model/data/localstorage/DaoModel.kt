@@ -39,6 +39,9 @@ interface DaoModel {
     @Query("SELECT id FROM indicator_parameters WHERE indicator_id == :indicatorId")
     fun getIndicatorParametersID(indicatorId : Int) : Flow<List<Int>>
 
+    @Query("SELECT * FROM indicator_parameters WHERE indicator_id == :indicatorId")
+    fun getIndicatorParametersByIndicatorId(indicatorId : Int?) : Flow<List<EntityIndicatorParameters>>
+
 
     @Query("SELECT id FROM indicator_values WHERE indicator_id == :indicatorId")
     fun getIdIndicatorValuesIdByIndicatorId(indicatorId : Int) : Flow<List<Int>>

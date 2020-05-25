@@ -85,8 +85,10 @@ class IndicatorFragment : Fragment(), CoroutineScope {
         indicator?.let {
             currentIndicator = it
             indicator_title.text = indicator.title
+
             indicator.parameters?.let { parametersList ->
                 if (parametersList.isEmpty()) {
+                    Timber.d("Indicator.parameters is empty")
                     return
                 }
                 parametersList.forEach {param ->
@@ -95,7 +97,7 @@ class IndicatorFragment : Fragment(), CoroutineScope {
                     }
                     param.id.let { parametersMap[id] = addSpinnerView(param) }
                 }
-            }
+            } ?: Timber.d("Indicator.parameters is null")
             initAdapter(indicator.parameters)
         }
 //        initChart()
@@ -103,39 +105,22 @@ class IndicatorFragment : Fragment(), CoroutineScope {
     }
 
     private fun addSpinnerView(indicatorParameter: IndicatorParameter): Spinner {
-
-        val matchParent = LinearLayout.LayoutParams.MATCH_PARENT
-        val wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT
-
-        val parameterView = LinearLayout(context)
-        parameterView.layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
-        parameterView.orientation = LinearLayout.HORIZONTAL
-        val screenDensity = context?.resources?.displayMetrics?.density ?: 0f
-        (parameterView.layoutParams as ViewGroup.MarginLayoutParams).topMargin =
-            4 * screenDensity.toInt()
-
-        val title = TextView(context)
-        title.layoutParams = LinearLayout.LayoutParams(wrapContent, wrapContent)
-        title.text = indicatorParameter.title
-
-        val spinner = Spinner(context)
-        spinner.layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+        Timber.d("Spinner start init")
         val adapter =
             context?.let {
+                val values = mutableListOf<String>()
+                    indicatorParameter.values.forEach{
+                        Timber.d("Spinner add indicatorParameter.values.${it.value}")
+                        values.add(it.value)
+                    }
                 ArrayAdapter(
                     it,
                     android.R.layout.simple_spinner_item,
-                    indicatorParameter.values
+                    values
                 )
             }
         adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
-
-        parameterView.addView(title)
-        parameterView.addView(spinner)
-
-        parameters.addView(parameterView)
-
         return spinner
     }
 
