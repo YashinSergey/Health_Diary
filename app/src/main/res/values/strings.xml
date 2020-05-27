@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Health Diary</string>
-    <string name="enter_today_value">Введите данные</string>
+    <string name="enter_today_value">Enter today value</string>
     <string name="indicators_icon">indicators icon</string>
     <string name="profile">Профиль</string>
     <string name="calendar">Календарь</string>
     <string name="home">Главная</string>
     <string name="health_diary_text_all_caps">ДНЕВНИК ЗДОРОВЬЯ</string>
+    <string name="indicators_add">add value</string>
     <string name="indicator">Показатель</string>
     <string name="time">Время</string>
     <string name="delete_note">delete note</string>

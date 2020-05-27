@@ -9,13 +9,34 @@ import com.healthdiary.model.data.repositories.Repository
 import com.healthdiary.model.entities.Indicator
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_home_rv.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) : RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
+@OptIn(ExperimentalCoroutinesApi::class)
+class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> Unit) :
+    RecyclerView.Adapter<HomeRVAdapter.ViewHolder>(), CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = Dispatchers.IO
 
     var itemsList: List<Indicator>? = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_home_rv, parent, false))
+        ViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_home_rv,
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount(): Int = itemsList?.size ?: 0
 
@@ -25,13 +46,26 @@ class HomeRVAdapter(val repository: Repository, private val listener: (Int) -> U
         holder.itemView.setOnClickListener { item?.let { listener(it.id) } }
     }
 
+
+    @ExperimentalCoroutinesApi
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(entity: Indicator?) {
             tv_indicator_title.text = entity?.title
-            tv_indicators_value.text = String.format(
-                "${repository.getNotesByIndicatorId(entity?.id).let { it[it.size-1].value }}")
+            when (entity?.icon) {
+                100 -> icon.setImageResource(R.drawable.ic_bathroom_scales)
+                101 -> icon.setImageResource(R.drawable.ic_hospital_bed)
+                102 -> icon.setImageResource(R.drawable.ic_health_thermometer)
+                199 -> icon.setImageResource(R.drawable.ic_skull_and_crossbones)
+                else -> icon.setImageResource(R.drawable.ic_eye_closeup)
+            }
+            icon.drawable
+            launch {
+                repository.getLastValueByIndicatorId(entity?.id).collect {
+                    tv_indicators_value.text = "${it?.value ?: 0}"
+                }
+            }
         }
     }
 }
